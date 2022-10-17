@@ -8,6 +8,8 @@ export default function InputField({
     placeholder,
     type,
     onChange,
+    valid,
+    validMessage,
     required
 }) {
     return (
@@ -26,6 +28,7 @@ export default function InputField({
                 placeholder={placeholder}
                 onChange={onChange}
             />
+            {!valid && <label className="error">{validMessage}</label>}
         </div>
     );
 }

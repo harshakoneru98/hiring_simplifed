@@ -1,5 +1,6 @@
 $button-color: #137dc5;
 $alt-auth-color: #7f7d7d;
+$h3-font-family: 'Fira Sans', sans-serif;
 
 .auth-form {
     width: 500px;
@@ -22,7 +23,7 @@ h3 {
     line-height: 1;
     padding-bottom: 20px;
     font-size: 1.75rem;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: $h3-font-family;
 }
 
 .btn-block {

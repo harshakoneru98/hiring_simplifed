@@ -1,8 +1,10 @@
+$red-color: #ff2600d6;
+
 .form-group {
     margin-bottom: 1rem;
     
     span{
-        color: #ff2600d6;
+        color: $red-color;
         padding-left: 2px;
     }
 
@@ -10,5 +12,12 @@
         margin-bottom: 0.5rem;
         font-weight: 500;
         text-align: justify;
+    }
+
+    .error{
+        color: $red-color;
+        font-size: 0.8em;
+        text-align: left;
+        margin-bottom: 0;
     }
 }

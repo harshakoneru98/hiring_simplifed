@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
-const config = require('../../../config');
+const { v4: uuidv4 } = require('uuid');
 const { GraphQLError } = require('graphql');
+const config = require('../../../config');
 
 AWS.config.update({
     region: config.AWS_REGION,
@@ -11,25 +12,47 @@ AWS.config.update({
 module.exports = {
     createUser: async (parent, args) => {
         const user = args.input;
-        let params = {
+
+        let documentClient = new AWS.DynamoDB.DocumentClient();
+
+        let email_check_params = {
             TableName: config.DATABASE_NAME,
-            Item: {
-                PK: `USER#${user.email}`,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                password: user.password
+            IndexName: config.EMAIL_INDEX,
+            KeyConditionExpression: '#email = :email',
+            ExpressionAttributeNames: { '#email': 'email' },
+            ExpressionAttributeValues: {
+                ':email': user.email
             }
         };
-        let documentClient = new AWS.DynamoDB.DocumentClient();
-        try {
-            await documentClient.put(params).promise();
-            return {
-                status: 200,
-                message: 'User created successfully'
+
+        const email_response = await documentClient
+            .query(email_check_params)
+            .promise();
+
+        if (email_response.Count === 1) {
+            throw new GraphQLError('Email already exists');
+        } else {
+            const userId = uuidv4();
+            let params = {
+                TableName: config.DATABASE_NAME,
+                Item: {
+                    PK: `USER#${userId}`,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    password: user.password
+                }
             };
-        } catch (err) {
-            throw new GraphQLError(err.message);
+
+            try {
+                await documentClient.put(params).promise();
+                return {
+                    status: 200,
+                    message: 'User created successfully'
+                };
+            } catch (err) {
+                throw new GraphQLError(err.message);
+            }
         }
     }
 };

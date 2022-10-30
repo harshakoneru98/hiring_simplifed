@@ -1,5 +1,13 @@
 @use '../login/login.scss';
+$red-color: #ff2600d6;
 
 .sign-up-form{
     top: 53%;
+}
+
+.error{
+    color: $red-color;
+    font-size: 0.8em;
+    text-align: left;
+    margin-bottom: 0;
 }

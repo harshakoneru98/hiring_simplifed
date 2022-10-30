@@ -26,7 +26,7 @@ export default function LoginView() {
             <AuthHeader />
             <div className="auth-form">
                 <h3>Sign In</h3>
-                <form className="form">
+                <form className="form sign-in">
                     <InputField
                         type="email"
                         value={email}

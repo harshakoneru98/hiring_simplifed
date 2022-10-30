@@ -196,7 +196,9 @@ export default function RegisterView() {
                         validMessage="Passwords doesn't match"
                         required
                     />
-
+                    {userError?.message === 'Email already exists' && (
+                        <label className="error">{userError?.message}</label>
+                    )}
                     <button
                         className="btn btn-primary btn-block"
                         onClick={(e) => {

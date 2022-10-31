@@ -1,12 +1,37 @@
-import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { gql, useLazyQuery } from '@apollo/client';
 import AuthHeader from '../../components/AuthHeader/authHeader.component';
 import InputField from '../../components/InputField/inputField.component';
 import './login.scss';
 
+const QUERY_LOGIN = gql`
+    query tokenGeneration($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+            userId
+            token
+            tokenExpiration
+        }
+    }
+`;
+
 export default function LoginView() {
+    let navigate = useNavigate();
+
     const [inputValue, setInputValue] = useState({ email: '', password: '' });
+    const [inputCheck, setInputCheck] = useState(false);
     const { email, password } = inputValue;
+
+    const [
+        fetchLogin,
+        { data: loginData, loading: loginLoading, error: loginError }
+    ] = useLazyQuery(QUERY_LOGIN);
+
+    useEffect(() => {
+        if (loginData) {
+            navigate(`/dashboard`);
+        }
+    }, [loginData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,8 +42,17 @@ export default function LoginView() {
     };
 
     const login = () => {
-        console.log('Email : ', email);
-        console.log('Password : ', password);
+        if (email != '' || password != '') {
+            fetchLogin({
+                variables: {
+                    email: email,
+                    password: password
+                }
+            });
+            setInputCheck(false);
+        } else {
+            setInputCheck(true);
+        }
     };
 
     return (
@@ -45,6 +79,12 @@ export default function LoginView() {
                         onChange={handleChange}
                         required
                     />
+                    {!inputCheck && loginError && (
+                        <label className="error">{loginError?.message}</label>
+                    )}
+                    {inputCheck && (
+                        <label className="error">Invalid Credentials</label>
+                    )}
                     <button
                         className="btn btn-primary btn-block"
                         onClick={(e) => {

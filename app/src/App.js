@@ -3,6 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import HomeView from './views/home/home.view';
 import LoginView from './views/login/login.view';
 import RegisterView from './views/register/register.view';
+import DashboardView from './views/dashboard/dashboard.view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route exact path="/" element={<HomeView />} />
                     <Route path="/login" element={<LoginView />} />
                     <Route path="/register" element={<RegisterView />} />
+                    <Route path="/dashboard" element={<DashboardView />} />
                 </Routes>
             </Router>
         </ApolloProvider>

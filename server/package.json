@@ -12,8 +12,10 @@
   "dependencies": {
     "apollo-server": "^3.10.3",
     "aws-sdk": "^2.1233.0",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
+    "jsonwebtoken": "^8.5.1",
     "node-cache": "^5.1.2",
     "nodemon": "^2.0.20",
     "uuid": "^9.0.0"

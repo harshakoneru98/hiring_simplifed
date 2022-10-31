@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
 const { GraphQLError } = require('graphql');
 const config = require('../../../config');
 
@@ -33,6 +34,7 @@ module.exports = {
             throw new GraphQLError('Email already exists');
         } else {
             const userId = uuidv4();
+            const hashedPassword = await bcrypt.hash(user.password, 12);
             let params = {
                 TableName: config.DATABASE_NAME,
                 Item: {
@@ -40,7 +42,7 @@ module.exports = {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
-                    password: user.password
+                    password: hashedPassword
                 }
             };
 

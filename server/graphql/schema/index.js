@@ -25,6 +25,16 @@ const typeDefs = gql`
         message: String!
     }
 
+    type AuthData {
+        userId: ID!
+        token: String!
+        tokenExpiration: Int!
+    }
+
+    type Query {
+        login(email: String!, password: String!): AuthData!
+    }
+
     type Mutation {
         createUser(input: createUserInput!): messageResponse
     }

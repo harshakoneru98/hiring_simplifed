@@ -1,6 +1,7 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { gql, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
 import AuthHeader from '../../components/AuthHeader/authHeader.component';
 import InputField from '../../components/InputField/inputField.component';
 import './login.scss';
@@ -17,6 +18,7 @@ const QUERY_LOGIN = gql`
 
 export default function LoginView() {
     let navigate = useNavigate();
+    let contextType = useContext(AuthContext);
 
     const [inputValue, setInputValue] = useState({ email: '', password: '' });
     const [inputCheck, setInputCheck] = useState(false);
@@ -29,6 +31,13 @@ export default function LoginView() {
 
     useEffect(() => {
         if (loginData) {
+            if (loginData?.login?.token) {
+                contextType.login(
+                    loginData.login.token,
+                    loginData.login.userId,
+                    loginData.login.tokenExpiration
+                );
+            }
             navigate(`/dashboard`);
         }
     }, [loginData]);

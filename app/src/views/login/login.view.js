@@ -65,7 +65,6 @@ export default function LoginView() {
 
     return (
         <Fragment>
-            {/* <AuthHeader /> */}
             <div className="auth-form">
                 <h3>Sign In</h3>
                 <form className="form sign-in">

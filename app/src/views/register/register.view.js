@@ -149,7 +149,6 @@ export default function RegisterView() {
 
     return (
         <Fragment>
-            {/* <AuthHeader /> */}
             <div className="auth-form sign-up-form">
                 <h3>Sign Up</h3>
                 <form className="form">

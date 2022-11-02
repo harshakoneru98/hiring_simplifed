@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import {
     BrowserRouter as Router,
     Routes,
@@ -17,11 +17,13 @@ import HomeView from './views/home/home.view';
 import LoginView from './views/login/login.view';
 import RegisterView from './views/register/register.view';
 import DashboardView from './views/dashboard/dashboard.view';
+import ProfileView from './views/profile/profile.view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     const [token, setToken] = useState(null);
     const [userId, setUserId] = useState(null);
+    const ls_token = localStorage.getItem('token');
 
     const httpLink = createHttpLink({
         uri: 'http://localhost:4000/graphql'
@@ -79,30 +81,51 @@ function App() {
                     }}
                 >
                     <Routes>
-                        {!token && (
-                            <Route exact path="/" element={<HomeView />} />
+                        {!ls_token && (
+                            <Fragment>
+                                <Route exact path="/" element={<HomeView />} />
+                                <Route
+                                    exact
+                                    path="/login"
+                                    element={<LoginView />}
+                                />
+                                <Route
+                                    exact
+                                    path="/register"
+                                    element={<RegisterView />}
+                                />
+                            </Fragment>
                         )}
-                        {!token && (
-                            <Route path="/login" element={<LoginView />} />
+
+                        {ls_token && (
+                            <Fragment>
+                                <Route
+                                    exact
+                                    path="/"
+                                    element={<Navigate to="/dashboard" />}
+                                />
+                                <Route
+                                    path="/login"
+                                    element={<Navigate to="/dashboard" />}
+                                />
+                                <Route
+                                    path="/register"
+                                    element={<Navigate to="/dashboard" />}
+                                />
+                                <Route
+                                    path="/dashboard"
+                                    exact
+                                    element={<DashboardView />}
+                                />
+                                <Route
+                                    path="/profile"
+                                    exact
+                                    element={<ProfileView />}
+                                />
+                            </Fragment>
                         )}
-                        {!token && (
-                            <Route
-                                path="/register"
-                                element={<RegisterView />}
-                            />
-                        )}
-                        {token && (
-                            <Route
-                                path="/dashboard"
-                                element={<DashboardView />}
-                            />
-                        )}
-                        {!token && (
-                            <Route
-                                path="/*"
-                                element={<Navigate to="/login" />}
-                            />
-                        )}
+
+                        <Route path="/*" element={<Navigate to="/login" />} />
                     </Routes>
                 </AuthContext.Provider>
             </Router>

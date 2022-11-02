@@ -50,7 +50,7 @@ export default function LoginView() {
     };
 
     const login = () => {
-        if (email != '' || password != '') {
+        if (email !== '' || password !== '') {
             fetchLogin({
                 variables: {
                     email: email,

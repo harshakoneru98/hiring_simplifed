@@ -14,7 +14,7 @@ export default function Header() {
     const [authPages, setAuthPages] = useState(true);
 
     useEffect(() => {
-        if (path != '/' && path != '/login' && path != '/register') {
+        if (path !== '/' && path !== '/login' && path !== '/register') {
             setAuthPages(false);
         } else {
             setAuthPages(true);
@@ -23,7 +23,7 @@ export default function Header() {
 
     return (
         <Fragment>
-            {path != '/' && (
+            {path !== '/' && (
                 <Navbar bg="light" expand="lg">
                     <Container>
                         <Navbar.Brand

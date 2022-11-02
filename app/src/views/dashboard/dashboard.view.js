@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import Header from '../../components/Header/header.component';
+import React from 'react';
 
 export default function DashboardView() {
     return (

@@ -4,6 +4,7 @@ const typeDefs = gql`
     type User {
         firstName: String!
         lastName: String!
+        h1b_required: Boolean!
         email: String!
         password: String!
         skills: [String]
@@ -16,6 +17,7 @@ const typeDefs = gql`
     input createUserInput {
         firstName: String!
         lastName: String!
+        h1b_required: Boolean!
         email: String!
         password: String!
     }

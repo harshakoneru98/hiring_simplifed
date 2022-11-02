@@ -41,6 +41,7 @@ module.exports = {
                     PK: `USER#${userId}`,
                     firstName: user.firstName,
                     lastName: user.lastName,
+                    h1b_required: user.h1b_required,
                     email: user.email,
                     password: hashedPassword
                 }

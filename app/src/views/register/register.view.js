@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import InputField from '../../components/InputField/inputField.component';
+import RadioButtonField from '../../components/RadioButton/radioButton.component';
 import './register.scss';
 
 const CREATE_USER_MUTATION = gql`
@@ -19,6 +20,7 @@ export default function RegisterView() {
     const [inputValue, setInputValue] = useState({
         firstName: '',
         lastName: '',
+        h1b: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -27,17 +29,19 @@ export default function RegisterView() {
     const [inputValueValid, setInputValueValid] = useState({
         firstNameValid: true,
         lastNameValid: true,
+        h1bValid: true,
         emailValid: true,
         passwordValid: true,
         passwordMatchValid: true
     });
 
-    const { firstName, lastName, email, password, confirmPassword } =
+    const { firstName, lastName, h1b, email, password, confirmPassword } =
         inputValue;
 
     const {
         firstNameValid,
         lastNameValid,
+        h1bValid,
         emailValid,
         passwordValid,
         passwordMatchValid
@@ -96,6 +100,12 @@ export default function RegisterView() {
             setFunction('lastNameValid', false, 'valid');
         }
 
+        if (h1b !== '') {
+            setFunction('h1bValid', true, 'valid');
+        } else {
+            setFunction('h1bValid', false, 'valid');
+        }
+
         if (emailRegrex.test(email)) {
             setFunction('emailValid', true, 'valid');
         } else {
@@ -117,15 +127,18 @@ export default function RegisterView() {
         if (
             nameRegrex.test(firstName) &&
             nameRegrex.test(lastName) &&
+            h1b !== '' &&
             emailRegrex.test(email) &&
             passwordRegrex.test(password) &&
             password === confirmPassword
         ) {
+            const h1b_required = h1b === 'Yes' ? true : false;
             createUser({
                 variables: {
                     input: {
                         firstName,
                         lastName,
+                        h1b_required,
                         email,
                         password
                     }
@@ -160,6 +173,17 @@ export default function RegisterView() {
                         onChange={handleChange}
                         valid={lastNameValid}
                         validMessage="Use only alphabetic characters"
+                        required
+                    />
+                    <RadioButtonField
+                        type="radio"
+                        value={h1b}
+                        label="Will you now or in the future require H1B sponsorship?"
+                        options={['Yes', 'No']}
+                        name="h1b"
+                        onChange={handleChange}
+                        valid={h1bValid}
+                        validMessage="Select atleast one of the above options"
                         required
                     />
                     <InputField

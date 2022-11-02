@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { gql, useLazyQuery } from '@apollo/client';
 import AuthContext from '../../context/auth-context';
-import AuthHeader from '../../components/AuthHeader/authHeader.component';
 import InputField from '../../components/InputField/inputField.component';
 import './login.scss';
 
@@ -66,7 +65,7 @@ export default function LoginView() {
 
     return (
         <Fragment>
-            <AuthHeader />
+            {/* <AuthHeader /> */}
             <div className="auth-form">
                 <h3>Sign In</h3>
                 <form className="form sign-in">

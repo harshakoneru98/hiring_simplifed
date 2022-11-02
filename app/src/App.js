@@ -13,6 +13,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import AuthContext from './context/auth-context';
+import Header from './components/Header/header.component';
 import HomeView from './views/home/home.view';
 import LoginView from './views/login/login.view';
 import RegisterView from './views/register/register.view';
@@ -72,62 +73,72 @@ function App() {
     return (
         <ApolloProvider client={client}>
             <Router>
-                <AuthContext.Provider
-                    value={{
-                        token: token,
-                        userId: userId,
-                        login: login,
-                        logout: logout
-                    }}
-                >
-                    <Routes>
-                        {!ls_token && (
-                            <Fragment>
-                                <Route exact path="/" element={<HomeView />} />
-                                <Route
-                                    exact
-                                    path="/login"
-                                    element={<LoginView />}
-                                />
-                                <Route
-                                    exact
-                                    path="/register"
-                                    element={<RegisterView />}
-                                />
-                            </Fragment>
-                        )}
+                <Fragment>
+                    <AuthContext.Provider
+                        value={{
+                            token: token,
+                            userId: userId,
+                            login: login,
+                            logout: logout
+                        }}
+                    >
+                        <Header />
+                        <Routes>
+                            {!ls_token && (
+                                <Fragment>
+                                    <Route
+                                        exact
+                                        path="/"
+                                        element={<HomeView />}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/login"
+                                        element={<LoginView />}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/register"
+                                        element={<RegisterView />}
+                                    />
+                                </Fragment>
+                            )}
 
-                        {ls_token && (
-                            <Fragment>
-                                <Route
-                                    exact
-                                    path="/"
-                                    element={<Navigate to="/dashboard" />}
-                                />
-                                <Route
-                                    path="/login"
-                                    element={<Navigate to="/dashboard" />}
-                                />
-                                <Route
-                                    path="/register"
-                                    element={<Navigate to="/dashboard" />}
-                                />
-                                <Route
-                                    path="/dashboard"
-                                    exact
-                                    element={<DashboardView />}
-                                />
-                                <Route
-                                    path="/profile"
-                                    exact
-                                    element={<ProfileView />}
-                                />
-                            </Fragment>
-                        )}
+                            {ls_token && (
+                                <Fragment>
+                                    <Route
+                                        exact
+                                        path="/"
+                                        element={<Navigate to="/dashboard" />}
+                                    />
+                                    <Route
+                                        path="/login"
+                                        element={<Navigate to="/dashboard" />}
+                                    />
+                                    <Route
+                                        path="/register"
+                                        element={<Navigate to="/dashboard" />}
+                                    />
+                                    <Route
+                                        path="/dashboard"
+                                        exact
+                                        element={<DashboardView />}
+                                    />
+                                    <Route
+                                        path="/profile"
+                                        exact
+                                        element={<ProfileView />}
+                                    />
+                                </Fragment>
+                            )}
 
-                        <Route path="/*" element={<Navigate to="/login" />} />
-                    </Routes>
-                </AuthContext.Provider>
+                            <Route
+                                path="/*"
+                                element={<Navigate to="/login" />}
+                            />
+                        </Routes>
+                    </AuthContext.Provider>
+                </Fragment>
             </Router>
         </ApolloProvider>
     );

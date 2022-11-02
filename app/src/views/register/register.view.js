@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
-import AuthHeader from '../../components/AuthHeader/authHeader.component';
 import InputField from '../../components/InputField/inputField.component';
 import './register.scss';
 
@@ -137,7 +136,7 @@ export default function RegisterView() {
 
     return (
         <Fragment>
-            <AuthHeader />
+            {/* <AuthHeader /> */}
             <div className="auth-form sign-up-form">
                 <h3>Sign Up</h3>
                 <form className="form">

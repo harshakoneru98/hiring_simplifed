@@ -24,7 +24,7 @@ export default function Header() {
     return (
         <Fragment>
             {path !== '/' && (
-                <Navbar bg="light" expand="lg">
+                <Navbar expand="lg" className="header">
                     <Container>
                         <Navbar.Brand
                             as={Link}

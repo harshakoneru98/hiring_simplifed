@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
 import './dashboard.scss';
@@ -20,9 +20,11 @@ export default function DashboardView() {
         { data: resumeData, loading: resumeLoading, error: resumeError }
     ] = useMutation(UPLOAD_RESUME_MUTATION);
 
-    if (resumeData) {
-        console.log('Data : ', resumeData);
-    }
+    useEffect(() => {
+        if (resumeData) {
+            setFiles([]);
+        }
+    }, [resumeData]);
 
     const uploadFile = () => {
         if (files[0]) {
@@ -56,11 +58,7 @@ export default function DashboardView() {
         <div className="container">
             <div className="row">
                 <div className="main_content">
-                    <div className="content">
-                        <h1>Welcome to Dashboard</h1>
-                    </div>
-                    <br />
-                    <div className="container">
+                    <div className="resume-container">
                         <h4>Upload Resume</h4>
                         <div className="upload-container">
                             <div className="border-container">
@@ -76,13 +74,13 @@ export default function DashboardView() {
                                 </div>
                             </div>
                         </div>
-                        <table>
+                        <table className="upload-table">
                             <tbody>
                                 <tr>
                                     <th>
                                         <a
                                             className={
-                                                files[0]?.name
+                                                files[0]?.name && !resumeLoading
                                                     ? 'btn btn-success'
                                                     : 'btn btn-success is-diabled'
                                             }
@@ -96,7 +94,11 @@ export default function DashboardView() {
                                     </th>
                                     <th>
                                         <a
-                                            className="btn btn-danger"
+                                            className={
+                                                !resumeLoading
+                                                    ? 'btn btn-danger'
+                                                    : 'btn btn-danger is-diabled'
+                                            }
                                             onClick={(e) => {
                                                 setFiles([]);
                                                 e.preventDefault();

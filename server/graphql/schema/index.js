@@ -1,6 +1,9 @@
-const { gql } = require('apollo-server');
+import { gql } from 'apollo-server-express';
+import Upload from 'graphql-upload/Upload.mjs';
 
-const typeDefs = gql`
+export const typeDefs = gql`
+    scalar Upload
+
     type User {
         firstName: String!
         lastName: String!
@@ -39,7 +42,6 @@ const typeDefs = gql`
 
     type Mutation {
         createUser(input: createUserInput!): messageResponse
+        uploadResumeFile(file: Upload!): messageResponse
     }
 `;
-
-module.exports = { typeDefs };

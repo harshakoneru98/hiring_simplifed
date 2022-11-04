@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
 const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
@@ -8,7 +8,7 @@ const DATABASE_NAME = process.env.DATABASE_NAME;
 const EMAIL_INDEX = process.env.EMAIL_INDEX;
 const AUTH_KEY = process.env.AUTH_KEY;
 
-module.exports = {
+export default {
     AWS_ACCESS_KEY,
     AWS_SECRET_KEY,
     AWS_REGION,

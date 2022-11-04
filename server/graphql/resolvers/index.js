@@ -1,13 +1,15 @@
-const authQuery = require('./auth/authQuery');
-const authMutation = require('./auth/authMutation');
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import authQuery from './auth/authQuery.js';
+import authMutation from './auth/authMutation.js';
+import fileUploadMutation from './fileUpload/fileUploadMutation.js';
 
-const resolvers = {
+export const resolvers = {
+    Upload: GraphQLUpload,
     Query: {
         ...authQuery
     },
     Mutation: {
-        ...authMutation
+        ...authMutation,
+        ...fileUploadMutation
     }
 };
-
-module.exports = { resolvers };

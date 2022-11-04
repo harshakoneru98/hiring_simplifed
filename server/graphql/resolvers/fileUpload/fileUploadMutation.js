@@ -3,13 +3,14 @@ import config from '../../../config.js';
 import fs from 'fs';
 
 const uploadResumeFile = async (parent, { file }) => {
-    const { createReadStream, fileName, mimeyype, encoding } = await file;
+    const { createReadStream, filename, mimetype, encoding } = await file;
 
     const stream = createReadStream();
-    const pathName = './' + fileName;
+    const pathName = './' + filename;
 
     try {
-        await stream.pipe(fs.createWriteStream(pathName));
+        const out = await stream.pipe(fs.createWriteStream(pathName));
+        stream.pipe(out);
         return {
             status: 200,
             message: 'File uploaded successfully'

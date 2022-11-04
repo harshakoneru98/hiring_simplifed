@@ -8,7 +8,7 @@ async function startServer() {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        csrfPrevention: true
+        uploads: false
     });
 
     await server.start();

@@ -5,12 +5,8 @@ import {
     Route,
     Navigate
 } from 'react-router-dom';
-import {
-    ApolloClient,
-    InMemoryCache,
-    createHttpLink,
-    ApolloProvider
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import AuthContext from './context/auth-context';
 import Header from './components/Header/header.component';
@@ -25,9 +21,10 @@ function App() {
     const [token, setToken] = useState(null);
     const [userId, setUserId] = useState(null);
     const ls_token = localStorage.getItem('token');
+    const graphqlURI = 'http://localhost:4000/graphql';
 
-    const httpLink = createHttpLink({
-        uri: 'http://localhost:4000/graphql'
+    const uploadLink = createUploadLink({
+        uri: graphqlURI
     });
 
     const authLink = setContext((_, { headers }) => {
@@ -43,7 +40,7 @@ function App() {
     });
 
     const client = new ApolloClient({
-        link: authLink.concat(httpLink),
+        link: authLink.concat(uploadLink),
         cache: new InMemoryCache()
     });
 

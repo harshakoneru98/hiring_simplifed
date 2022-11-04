@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
+import { useDropzone } from 'react-dropzone';
+import './dashboard.scss';
 
 const UPLOAD_RESUME_MUTATION = gql`
     mutation uploadResumeFile($file: Upload!) {
@@ -11,6 +13,8 @@ const UPLOAD_RESUME_MUTATION = gql`
 `;
 
 export default function DashboardView() {
+    const [files, setFiles] = useState([]);
+
     const [
         uploadResumeFile,
         { data: resumeData, loading: resumeLoading, error: resumeError }
@@ -20,14 +24,33 @@ export default function DashboardView() {
         console.log('Data : ', resumeData);
     }
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        console.log('File : ', file);
-
-        if (!file) return;
-
-        uploadResumeFile({ variables: { file } });
+    const uploadFile = () => {
+        if (files[0]) {
+            const file = files[0];
+            uploadResumeFile({ variables: { file } });
+        }
     };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'application/pdf',
+        onDrop: (acceptedFiles) => {
+            setFiles(
+                acceptedFiles.map((file) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file)
+                    })
+                )
+            );
+        }
+    });
+
+    const resume_file = files.map((file) => (
+        <div key={file.name}>
+            <div>
+                <iframe src={file.preview} height="500px"></iframe>
+            </div>
+        </div>
+    ));
 
     return (
         <div className="container">
@@ -35,7 +58,56 @@ export default function DashboardView() {
                 <div className="main_content">
                     <div className="content">
                         <h1>Welcome to Dashboard</h1>
-                        <input type="file" onChange={handleFileChange} />
+                    </div>
+                    <br />
+                    <div className="container">
+                        <h4>Upload Resume</h4>
+                        <div className="upload-container">
+                            <div className="border-container">
+                                <div {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <p>Drag and drop a file here, or click</p>
+                                    <p className="fileNames">
+                                        Only .pdf files allowed
+                                    </p>
+                                </div>
+                                <div>
+                                    <div>{resume_file}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        <a
+                                            className={
+                                                files[0]?.name
+                                                    ? 'btn btn-success'
+                                                    : 'btn btn-success is-diabled'
+                                            }
+                                            onClick={(e) => {
+                                                uploadFile();
+                                                e.preventDefault();
+                                            }}
+                                        >
+                                            Upload
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a
+                                            className="btn btn-danger"
+                                            onClick={(e) => {
+                                                setFiles([]);
+                                                e.preventDefault();
+                                            }}
+                                        >
+                                            Clear
+                                        </a>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

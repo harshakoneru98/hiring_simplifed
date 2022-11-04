@@ -21,10 +21,9 @@ function App() {
     const [token, setToken] = useState(null);
     const [userId, setUserId] = useState(null);
     const ls_token = localStorage.getItem('token');
-    const graphqlURI = 'http://localhost:4000/graphql';
 
     const uploadLink = createUploadLink({
-        uri: graphqlURI
+        uri: 'http://localhost:4000/graphql'
     });
 
     const authLink = setContext((_, { headers }) => {

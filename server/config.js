@@ -7,6 +7,7 @@ const AWS_REGION = process.env.AWS_REGION;
 const DATABASE_NAME = process.env.DATABASE_NAME;
 const EMAIL_INDEX = process.env.EMAIL_INDEX;
 const AUTH_KEY = process.env.AUTH_KEY;
+const RESUME_BUCKET = process.env.RESUME_BUCKET;
 
 export default {
     AWS_ACCESS_KEY,
@@ -14,5 +15,6 @@ export default {
     AWS_REGION,
     DATABASE_NAME,
     EMAIL_INDEX,
-    AUTH_KEY
+    AUTH_KEY,
+    RESUME_BUCKET
 };

@@ -1,16 +1,26 @@
+import AWS from 'aws-sdk';
 import { GraphQLError } from 'graphql';
 import config from '../../../config.js';
 import fs from 'fs';
 
+AWS.config.update({
+    region: config.AWS_REGION,
+    accessKeyId: config.AWS_ACCESS_KEY,
+    secretAccessKey: config.AWS_SECRET_KEY
+});
+
 const uploadResumeFile = async (parent, { file }) => {
     const { createReadStream, filename, mimetype, encoding } = await file;
+    const s3 = new AWS.S3();
 
-    const stream = createReadStream();
-    const pathName = './' + filename;
+    const resumeFileParams = {
+        Bucket: config.RESUME_BUCKET,
+        Key: filename,
+        Body: createReadStream()
+    };
 
     try {
-        const out = await stream.pipe(fs.createWriteStream(pathName));
-        stream.pipe(out);
+        await s3.upload(resumeFileParams).promise();
         return {
             status: 200,
             message: 'File uploaded successfully'

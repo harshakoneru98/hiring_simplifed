@@ -37,7 +37,7 @@ export default function LoginView() {
                     loginData.login.tokenExpiration
                 );
             }
-            navigate(`/dashboard`);
+            navigate(`/resume`);
         }
     }, [loginData]);
 

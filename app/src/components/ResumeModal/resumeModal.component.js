@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { gql, useMutation } from '@apollo/client';
+import { useSelector, useDispatch } from 'react-redux';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
+import { userDataByID } from '../../reduxSlices/userDataSlice';
 import './resumeModal.scss';
 
 const UPLOAD_RESUME_MUTATION = gql`
@@ -13,17 +15,87 @@ const UPLOAD_RESUME_MUTATION = gql`
     }
 `;
 
+const UPDATE_USER_DATA_MUTATION = gql`
+    mutation updateUserProfile($input: updateProfileInput!) {
+        updateUserProfile(input: $input) {
+            status
+            message
+        }
+    }
+`;
+
+const QUERY_USER_DATA = gql`
+    query getUserByID($userId: ID!) {
+        getUserDataById(userId: $userId) {
+            firstName
+            lastName
+            h1b_required
+            email
+            skills
+            resume_uploaded
+        }
+    }
+`;
+
 export default function ResumeModal({ show, backdrop }) {
     const [files, setFiles] = useState([]);
+    let dispatch = useDispatch();
+
+    const userInfo = useSelector((state) => state.userData.value);
+
+    const userId = localStorage.getItem('userId');
+
+    const {
+        data: userData,
+        loading: userLoading,
+        error: userError,
+        refetch
+    } = useQuery(QUERY_USER_DATA, {
+        variables: { userId }
+    });
 
     const [
         uploadResumeFile,
         { data: resumeData, loading: resumeLoading, error: resumeError }
     ] = useMutation(UPLOAD_RESUME_MUTATION);
 
+    const [
+        updateUserProfile,
+        {
+            data: updateUserData,
+            loading: updateUserLoading,
+            error: updateUserError
+        }
+    ] = useMutation(UPDATE_USER_DATA_MUTATION);
+
+    if (updateUserData) {
+        dispatch(userDataByID(userData.getUserDataById));
+    }
+
     useEffect(() => {
         if (resumeData) {
             setFiles([]);
+            let { firstName, lastName, h1b_required, resume_uploaded } =
+                userInfo;
+            resume_uploaded = true;
+
+            updateUserProfile({
+                variables: {
+                    input: {
+                        userId,
+                        firstName,
+                        lastName,
+                        h1b_required,
+                        resume_uploaded
+                    }
+                }
+            })
+                .then((data) => {
+                    refetch();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }, [resumeData]);
 

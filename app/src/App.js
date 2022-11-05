@@ -9,13 +9,14 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import AuthContext from './context/auth-context';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header/header.component';
 import HomeView from './views/home/home.view';
 import LoginView from './views/login/login.view';
 import RegisterView from './views/register/register.view';
 import DashboardView from './views/dashboard/dashboard.view';
 import ProfileView from './views/profile/profile.view';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import ResumeView from './views/resume/resume.view';
 
 function App() {
     const [token, setToken] = useState(null);
@@ -114,6 +115,11 @@ function App() {
                                     <Route
                                         path="/register"
                                         element={<Navigate to="/dashboard" />}
+                                    />
+                                    <Route
+                                        path="/resume"
+                                        exact
+                                        element={<ResumeView />}
                                     />
                                     <Route
                                         path="/dashboard"

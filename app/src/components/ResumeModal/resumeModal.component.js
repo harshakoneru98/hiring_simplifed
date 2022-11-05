@@ -7,8 +7,8 @@ import { userDataByID } from '../../reduxSlices/userDataSlice';
 import './resumeModal.scss';
 
 const UPLOAD_RESUME_MUTATION = gql`
-    mutation uploadResumeFile($file: Upload!) {
-        uploadResumeFile(file: $file) {
+    mutation uploadResumeFile($file: Upload!, $userId: ID!) {
+        uploadResumeFile(file: $file, userId: $userId) {
             status
             message
         }
@@ -102,7 +102,7 @@ export default function ResumeModal({ show, backdrop }) {
     const uploadFile = () => {
         if (files[0]) {
             const file = files[0];
-            uploadResumeFile({ variables: { file } });
+            uploadResumeFile({ variables: { file, userId } });
         }
     };
 

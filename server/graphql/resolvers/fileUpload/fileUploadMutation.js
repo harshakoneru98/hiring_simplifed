@@ -9,14 +9,16 @@ AWS.config.update({
     secretAccessKey: config.AWS_SECRET_KEY
 });
 
-const uploadResumeFile = async (parent, { file }) => {
+const uploadResumeFile = async (parent, { file, userId }) => {
     const { createReadStream, filename, mimetype, encoding } = await file;
     const s3 = new AWS.S3();
 
     const resumeFileParams = {
         Bucket: config.RESUME_BUCKET,
-        Key: filename,
-        Body: createReadStream()
+        Key: userId + '.pdf',
+        Body: createReadStream(),
+        ContentDisposition: 'inline',
+        ContentType: 'application/pdf'
     };
 
     try {

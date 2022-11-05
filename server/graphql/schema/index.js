@@ -61,7 +61,7 @@ export const typeDefs = gql`
 
     type Mutation {
         createUser(input: createUserInput!): messageResponse
-        uploadResumeFile(file: Upload!): messageResponse
+        uploadResumeFile(file: Upload!, userId: ID!): messageResponse
         updateUserProfile(input: updateProfileInput!): messageResponse
     }
 `;

@@ -1,21 +1,14 @@
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import ResumeModal from '../../components/ResumeModal/resumeModal.component';
+import React from 'react';
 import './dashboard.scss';
 
 export default function DashboardView() {
-    const [show, setShow] = useState(false);
-
-    const handleShow = () => setShow(true);
-
     return (
         <div className="container">
             <div className="row">
                 <div className="main_content">
-                    <Button variant="primary" onClick={handleShow}>
-                        Resume Upload
-                    </Button>
-                    {show && <ResumeModal show={show} backdrop="static" />}
+                    <div className="content">
+                        <h1>Welcome to Dashboard</h1>
+                    </div>
                 </div>
             </div>
         </div>

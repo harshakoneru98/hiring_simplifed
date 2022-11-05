@@ -37,7 +37,7 @@ const QUERY_USER_DATA = gql`
     }
 `;
 
-export default function ResumeModal({ show, backdrop }) {
+export default function ResumeModal({ show, backdrop, handleClose }) {
     const [files, setFiles] = useState([]);
     let dispatch = useDispatch();
 
@@ -128,7 +128,12 @@ export default function ResumeModal({ show, backdrop }) {
     ));
 
     return (
-        <Modal show={show} backdrop={backdrop} keyboard={false}>
+        <Modal
+            show={show}
+            backdrop={backdrop}
+            keyboard={false}
+            onHide={handleClose}
+        >
             <div className="resume-container">
                 <h4>Upload Resume</h4>
                 <div className="upload-container">

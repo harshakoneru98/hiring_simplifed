@@ -8,6 +8,8 @@ const DATABASE_NAME = process.env.DATABASE_NAME;
 const EMAIL_INDEX = process.env.EMAIL_INDEX;
 const AUTH_KEY = process.env.AUTH_KEY;
 const RESUME_BUCKET = process.env.RESUME_BUCKET;
+const PYTHON_PATH = process.env.PYTHON_PATH;
+const SERVER_URL = process.env.SERVER_URL;
 
 export default {
     AWS_ACCESS_KEY,
@@ -16,5 +18,7 @@ export default {
     DATABASE_NAME,
     EMAIL_INDEX,
     AUTH_KEY,
-    RESUME_BUCKET
+    RESUME_BUCKET,
+    PYTHON_PATH,
+    SERVER_URL
 };

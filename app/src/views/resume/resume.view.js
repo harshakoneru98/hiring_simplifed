@@ -27,8 +27,6 @@ export default function ResumeView() {
         navigate('/dashboard');
     }
 
-    // console.log('UserInfo : ', userInfo);
-
     const userId = localStorage.getItem('userId');
 
     const {

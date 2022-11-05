@@ -21,7 +21,9 @@
     "graphql-upload": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
     "node-cache": "^5.1.2",
+    "node-fetch": "^3.2.10",
     "nodemon": "^2.0.20",
+    "python-shell": "^3.0.1",
     "uuid": "^9.0.0"
   }
 }

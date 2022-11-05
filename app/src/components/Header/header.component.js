@@ -2,16 +2,50 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { gql, useQuery } from '@apollo/client';
 import AuthContext from '../../context/auth-context';
+import { userDataByID } from '../../reduxSlices/userDataSlice';
 import { Link, useLocation } from 'react-router-dom';
 import './header.scss';
+
+const QUERY_USER_DATA = gql`
+    query getUserByID($userId: ID!) {
+        getUserDataById(userId: $userId) {
+            firstName
+            lastName
+            h1b_required
+            email
+            skills
+            resume_uploaded
+        }
+    }
+`;
 
 export default function Header() {
     let contextType = useContext(AuthContext);
     let location = useLocation();
+    let dispatch = useDispatch();
+
+    const userId = localStorage.getItem('userId');
+
     const path = location?.pathname;
 
     const [authPages, setAuthPages] = useState(true);
+
+    const {
+        data: userData,
+        loading: userLoading,
+        error: userError
+    } = useQuery(QUERY_USER_DATA, {
+        variables: { userId }
+    });
+
+    useEffect(() => {
+        if (userData) {
+            dispatch(userDataByID(userData.getUserDataById));
+        }
+    }, [userData]);
 
     useEffect(() => {
         if (path !== '/' && path !== '/login' && path !== '/register') {

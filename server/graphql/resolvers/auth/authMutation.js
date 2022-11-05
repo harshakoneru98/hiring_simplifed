@@ -32,17 +32,18 @@ const createUser = async (parent, args) => {
     if (email_response.Count === 1) {
         throw new GraphQLError('Email already exists');
     } else {
-        const userId = v4();
         const hashedPassword = await bcrypt.hash(user.password, 12);
         let params = {
             TableName: config.DATABASE_NAME,
             Item: {
-                PK: `USER#${userId}`,
+                PK: v4(),
                 firstName: user.firstName,
                 lastName: user.lastName,
                 h1b_required: user.h1b_required,
                 email: user.email,
-                password: hashedPassword
+                password: hashedPassword,
+                skills: [],
+                resume_uploaded: false
             }
         };
 

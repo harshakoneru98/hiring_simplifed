@@ -11,6 +11,7 @@ export const typeDefs = gql`
         email: String!
         password: String!
         skills: [String]
+        resume_uploaded: Boolean!
     }
 
     type Query {

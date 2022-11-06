@@ -8,6 +8,8 @@ import ResumeModal from '../../components/ResumeModal/resumeModal.component';
 import InputField from '../../components/InputField/inputField.component';
 import RadioButtonField from '../../components/RadioButton/radioButton.component';
 import { FaPen } from 'react-icons/fa';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 import './profile.scss';
 
 const UPDATE_USER_DATA_MUTATION = gql`
@@ -34,12 +36,18 @@ const QUERY_USER_DATA = gql`
 
 export default function ProfileView() {
     const dispatch = useDispatch();
+    const animatedComponents = makeAnimated();
+
     const userInfo = useSelector((state) => state?.userData?.value);
 
     const userId = localStorage.getItem('userId');
 
     const [show, setShow] = useState(false);
+    const [skillOptions, setSkillOptions] = useState([]);
+    const [totalSkills, setTotalSkills] = useState([]);
+
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
+    const [editSkillsInfo, setEditSkillsInfo] = useState(false);
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -107,7 +115,20 @@ export default function ProfileView() {
             const h1b_req = userInfo.h1b_required === true ? 'Yes' : 'No';
             setFunction('h1b', h1b_req, 'input');
         }
+
+        const options = [];
+        if (userInfo?.skills) {
+            userInfo?.skills?.map((skill) => {
+                options.push({ value: skill, label: skill });
+            });
+            setSkillOptions(options);
+            setTotalSkills(options);
+        }
     }, [userInfo]);
+
+    useEffect(() => {
+        console.log('Skills : ', skillOptions);
+    }, [skillOptions]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -115,6 +136,7 @@ export default function ProfileView() {
     };
 
     const editPersonalTrue = () => setEditPersonalInfo(true);
+    const editSkillsTrue = () => setEditSkillsInfo(true);
     const editPersonalFalse = () => {
         setEditPersonalInfo(false);
         setFunction('firstName', userInfo.firstName, 'input');
@@ -172,6 +194,10 @@ export default function ProfileView() {
                 });
             setEditPersonalInfo(false);
         }
+    };
+
+    const handleSkillChange = (skills) => {
+        setSkillOptions(skills);
     };
 
     return (
@@ -275,6 +301,53 @@ export default function ProfileView() {
                                                     required
                                                 />
                                             </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </Card.Body>
+                    </Card>
+                    <Card className="personal-card skills-card">
+                        <Card.Title className="profile-title" as="h3">
+                            Skills Information
+                        </Card.Title>
+                        <Card.Body>
+                            <form className="form">
+                                <table className="profile-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {!editSkillsInfo && (
+                                                    <Button
+                                                        className="edit-skills-button"
+                                                        variant="primary"
+                                                        onClick={editSkillsTrue}
+                                                    >
+                                                        Edit{' '}
+                                                        <FaPen
+                                                            className="edit-icon"
+                                                            size={12}
+                                                        />
+                                                    </Button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <Select
+                                                    closeMenuOnSelect={false}
+                                                    components={
+                                                        animatedComponents
+                                                    }
+                                                    isClearable={false}
+                                                    value={skillOptions}
+                                                    isDisabled={!editSkillsInfo}
+                                                    onChange={handleSkillChange}
+                                                    isMulti
+                                                    options={totalSkills}
+                                                />
+                                            </td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>

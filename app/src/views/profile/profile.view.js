@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ResumeModal from '../../components/ResumeModal/resumeModal.component';
 import InputField from '../../components/InputField/inputField.component';
 import RadioButtonField from '../../components/RadioButton/radioButton.component';
+import { FaPen } from 'react-icons/fa';
 import './profile.scss';
 
 export default function ProfileView() {
     const userInfo = useSelector((state) => state?.userData?.value);
-    console.log('User Info : ', userInfo);
 
     const [show, setShow] = useState(false);
+    const [editPersonalInfo, setEditPersonalInfo] = useState(false);
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -47,7 +48,8 @@ export default function ProfileView() {
     };
 
     useEffect(() => {
-        if (userInfo) {
+        console.log('Change : ', userInfo);
+        if (userInfo.firstName) {
             setFunction('firstName', userInfo.firstName, 'input');
             setFunction('lastName', userInfo.lastName, 'input');
             const h1b_req = userInfo.h1b_required === true ? 'Yes' : 'No';
@@ -60,6 +62,19 @@ export default function ProfileView() {
         setFunction(name, value, 'input');
     };
 
+    const editPersonalTrue = () => setEditPersonalInfo(true);
+    const editPersonalFalse = () => {
+        setEditPersonalInfo(false);
+        setFunction('firstName', userInfo.firstName, 'input');
+        setFunction('lastName', userInfo.lastName, 'input');
+        const h1b_req = userInfo.h1b_required === true ? 'Yes' : 'No';
+        setFunction('h1b', h1b_req, 'input');
+    };
+
+    const editPersonal = () => {
+        console.log(inputValue);
+    };
+
     return (
         <div className="container">
             <div className="row">
@@ -67,6 +82,34 @@ export default function ProfileView() {
                     <Card>
                         <Card.Title className="profile-title" as="h3">
                             Personal Information
+                            {!editPersonalInfo && (
+                                <Button
+                                    className="edit-button"
+                                    variant="primary"
+                                    onClick={editPersonalTrue}
+                                >
+                                    Edit{' '}
+                                    <FaPen className="edit-icon" size={12} />
+                                </Button>
+                            )}
+                            {editPersonalInfo && (
+                                <Fragment>
+                                    <Button
+                                        className="cancel-button"
+                                        variant="danger"
+                                        onClick={editPersonalFalse}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        className="submit-button"
+                                        variant="success"
+                                        onClick={editPersonal}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Fragment>
+                            )}
                         </Card.Title>
                         <Card.Body>
                             <form className="form">
@@ -82,7 +125,7 @@ export default function ProfileView() {
                                                     name="firstName"
                                                     onChange={handleChange}
                                                     valid={firstNameValid}
-                                                    disabled={true}
+                                                    disabled={!editPersonalInfo}
                                                     validMessage="Use only alphabetic characters"
                                                     required
                                                 />
@@ -96,7 +139,7 @@ export default function ProfileView() {
                                                     name="lastName"
                                                     onChange={handleChange}
                                                     valid={lastNameValid}
-                                                    disabled={true}
+                                                    disabled={!editPersonalInfo}
                                                     validMessage="Use only alphabetic characters"
                                                     required
                                                 />
@@ -112,7 +155,7 @@ export default function ProfileView() {
                                                     name="h1b"
                                                     onChange={handleChange}
                                                     valid={h1bValid}
-                                                    disabled={true}
+                                                    disabled={!editPersonalInfo}
                                                     validMessage="Select atleast one of the above options"
                                                     required
                                                 />
@@ -120,7 +163,11 @@ export default function ProfileView() {
                                             <td>
                                                 <InputField
                                                     type="email"
-                                                    value={userInfo.email}
+                                                    value={
+                                                        userInfo.email
+                                                            ? userInfo.email
+                                                            : ''
+                                                    }
                                                     placeholder="Enter email"
                                                     label="Email Address"
                                                     name="email"

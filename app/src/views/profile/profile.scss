@@ -10,11 +10,11 @@ $button-color: #137dc5;
 
 .profile-table{
     margin: 0 auto;
-    width: 90%;
+    width: 80%;
     
     td{
         width: 50%;
-        padding-right: 20px;
+        padding-right: 30px;
     }
 }
 
@@ -30,6 +30,10 @@ $button-color: #137dc5;
 
 .edit-icon{
     margin-left: 5px;
+}
+
+.personal-card {
+    box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
 }
 
 

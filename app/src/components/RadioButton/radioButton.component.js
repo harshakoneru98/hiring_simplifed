@@ -10,7 +10,8 @@ export default function RadioButtonField({
     onChange,
     valid,
     validMessage,
-    required
+    required,
+    disabled
 }) {
     return (
         <div className="form-group">
@@ -30,6 +31,7 @@ export default function RadioButtonField({
                             id={option}
                             onChange={onChange}
                             value={option}
+                            disabled={disabled}
                             checked={value === option ? true : false}
                         />
                         <label className="form-check-label" htmlFor={option}>

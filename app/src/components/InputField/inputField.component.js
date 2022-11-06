@@ -10,7 +10,8 @@ export default function InputField({
     onChange,
     valid,
     validMessage,
-    required
+    required,
+    disabled
 }) {
     return (
         <div className="form-group">
@@ -27,6 +28,7 @@ export default function InputField({
                 className="form-control"
                 placeholder={placeholder}
                 onChange={onChange}
+                disabled={disabled}
             />
             {!valid && <label className="error">{validMessage}</label>}
         </div>

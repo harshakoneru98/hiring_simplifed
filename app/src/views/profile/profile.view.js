@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { userDataByID } from '../../reduxSlices/userDataSlice';
+import { refreshWindow } from '../../reduxSlices/refreshSlice';
 import ResumeModal from '../../components/ResumeModal/resumeModal.component';
 import InputField from '../../components/InputField/inputField.component';
 import RadioButtonField from '../../components/RadioButton/radioButton.component';
@@ -39,11 +40,15 @@ export default function ProfileView() {
     const animatedComponents = makeAnimated();
 
     const userInfo = useSelector((state) => state?.userData?.value);
+    const refreshNeeded = useSelector((state) => state?.refresh?.value);
 
     const userId = localStorage.getItem('userId');
+    const resume_url =
+        'https://parse-job-resumes.s3.amazonaws.com/' + userId + '.pdf';
 
     const [show, setShow] = useState(false);
     const [skillOptions, setSkillOptions] = useState([]);
+    const [iframeKey, setIframeKey] = useState(0);
     const [totalSkills, setTotalSkills] = useState([]);
 
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
@@ -115,7 +120,9 @@ export default function ProfileView() {
             const h1b_req = userInfo.h1b_required === true ? 'Yes' : 'No';
             setFunction('h1b', h1b_req, 'input');
         }
+    }, [userInfo]);
 
+    useEffect(() => {
         const options = [];
         if (userInfo?.skills) {
             userInfo?.skills?.map((skill) => {
@@ -124,11 +131,15 @@ export default function ProfileView() {
             setSkillOptions(options);
             setTotalSkills(options);
         }
-    }, [userInfo]);
+    }, [userData, userInfo]);
 
     useEffect(() => {
-        console.log('Skills : ', skillOptions);
-    }, [skillOptions]);
+        if (refreshNeeded) {
+            dispatch(refreshWindow(false));
+            setShow(false);
+            setIframeKey(iframeKey + 1);
+        }
+    }, [refreshNeeded]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -168,6 +179,7 @@ export default function ProfileView() {
         }
 
         const resume_uploaded = true;
+        const skills = userInfo?.skills;
 
         if (
             nameRegrex.test(firstName) &&
@@ -182,7 +194,8 @@ export default function ProfileView() {
                         firstName,
                         lastName,
                         h1b_required,
-                        resume_uploaded
+                        resume_uploaded,
+                        skills
                     }
                 }
             })
@@ -200,6 +213,10 @@ export default function ProfileView() {
         setSkillOptions(skills);
     };
 
+    const openResume = () => {
+        window.open(resume_url, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <div className="container">
             <div className="row">
@@ -207,39 +224,53 @@ export default function ProfileView() {
                     <Card className="personal-card">
                         <Card.Title className="profile-title" as="h3">
                             Personal Information
-                            {!editPersonalInfo && (
-                                <Button
-                                    className="edit-button"
-                                    variant="primary"
-                                    onClick={editPersonalTrue}
-                                >
-                                    Edit{' '}
-                                    <FaPen className="edit-icon" size={12} />
-                                </Button>
-                            )}
-                            {editPersonalInfo && (
-                                <Fragment>
-                                    <Button
-                                        className="cancel-button"
-                                        variant="danger"
-                                        onClick={editPersonalFalse}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        className="submit-button"
-                                        variant="success"
-                                        onClick={editPersonal}
-                                    >
-                                        Submit
-                                    </Button>
-                                </Fragment>
-                            )}
                         </Card.Title>
                         <Card.Body>
                             <form className="form">
                                 <table className="profile-table">
                                     <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                {!editPersonalInfo && (
+                                                    <Button
+                                                        className="edit-button"
+                                                        variant="primary"
+                                                        onClick={
+                                                            editPersonalTrue
+                                                        }
+                                                    >
+                                                        Edit{' '}
+                                                        <FaPen
+                                                            className="edit-icon"
+                                                            size={12}
+                                                        />
+                                                    </Button>
+                                                )}
+                                                {editPersonalInfo && (
+                                                    <Fragment>
+                                                        <Button
+                                                            className="cancel-button"
+                                                            variant="danger"
+                                                            onClick={
+                                                                editPersonalFalse
+                                                            }
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                        <Button
+                                                            className="submit-button"
+                                                            variant="success"
+                                                            onClick={
+                                                                editPersonal
+                                                            }
+                                                        >
+                                                            Submit
+                                                        </Button>
+                                                    </Fragment>
+                                                )}
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 <InputField
@@ -331,6 +362,24 @@ export default function ProfileView() {
                                                     </Button>
                                                 )}
                                             </td>
+                                            <td>
+                                                <Fragment>
+                                                    <Button
+                                                        className="cancel-button"
+                                                        variant="danger"
+                                                        onClick={handleShow}
+                                                    >
+                                                        Upload
+                                                    </Button>
+                                                    <Button
+                                                        className="submit-button"
+                                                        variant="success"
+                                                        onClick={openResume}
+                                                    >
+                                                        Preview
+                                                    </Button>
+                                                </Fragment>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -347,19 +396,26 @@ export default function ProfileView() {
                                                     options={totalSkills}
                                                 />
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                <Card>
+                                                    <Card.Body className="resume-body">
+                                                        <iframe
+                                                            key={iframeKey}
+                                                            src={resume_url}
+                                                        ></iframe>
+                                                    </Card.Body>
+                                                </Card>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </form>
                         </Card.Body>
                     </Card>
-                    {/* <Button variant="primary" onClick={handleShow}>
-                        Resume Upload
-                    </Button>
+
                     {show && (
                         <ResumeModal show={show} handleClose={handleClose} />
-                    )} */}
+                    )}
                 </div>
             </div>
         </div>

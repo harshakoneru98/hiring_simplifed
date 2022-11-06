@@ -32,11 +32,18 @@ export const typeDefs = gql`
         lastName: String!
         h1b_required: Boolean!
         resume_uploaded: Boolean!
+        skills: [String]
     }
 
     type messageResponse {
         status: Int!
         message: String!
+    }
+
+    type skillsMessageResponse {
+        status: Int!
+        message: String!
+        skills: [String]
     }
 
     type AuthData {
@@ -61,7 +68,11 @@ export const typeDefs = gql`
 
     type Mutation {
         createUser(input: createUserInput!): messageResponse
-        uploadResumeFile(file: Upload!, userId: ID!): messageResponse
+        uploadResumeFile(
+            file: Upload!
+            userId: ID!
+            existing_skills: [String]
+        ): skillsMessageResponse
         updateUserProfile(input: updateProfileInput!): messageResponse
     }
 `;

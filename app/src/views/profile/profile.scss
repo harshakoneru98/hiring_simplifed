@@ -14,7 +14,11 @@ $button-color: #137dc5;
     }
 }
 
-.edit-button, .submit-button, .cancel-button{
+.edit-button, .submit-button, .cancel-button, .edit-skills-button{
+    float: right;
+}
+
+.submit-button{
     float: right;
     margin-right: 20px;
 }
@@ -38,8 +42,16 @@ $button-color: #137dc5;
 }
 
 .edit-skills-button{
-    float: right;
     margin-bottom: 20px;
+}
+
+iframe {
+    height: 30em;
+    width: 100%;
+}
+
+.resume-body{
+    margin: 0 auto;
 }
 
 

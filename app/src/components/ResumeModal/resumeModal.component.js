@@ -4,13 +4,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
 import { userDataByID } from '../../reduxSlices/userDataSlice';
+import { refreshWindow } from '../../reduxSlices/refreshSlice';
 import './resumeModal.scss';
 
 const UPLOAD_RESUME_MUTATION = gql`
-    mutation uploadResumeFile($file: Upload!, $userId: ID!) {
-        uploadResumeFile(file: $file, userId: $userId) {
+    mutation uploadResumeFile(
+        $file: Upload!
+        $userId: ID!
+        $existing_skills: [String]
+    ) {
+        uploadResumeFile(
+            file: $file
+            userId: $userId
+            existing_skills: $existing_skills
+        ) {
             status
             message
+            skills
         }
     }
 `;
@@ -68,9 +78,12 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
         }
     ] = useMutation(UPDATE_USER_DATA_MUTATION);
 
-    if (updateUserData) {
-        dispatch(userDataByID(userData.getUserDataById));
-    }
+    useEffect(() => {
+        if (updateUserData) {
+            dispatch(userDataByID(userData.getUserDataById));
+            dispatch(refreshWindow(true));
+        }
+    }, [updateUserData]);
 
     useEffect(() => {
         if (resumeData) {
@@ -78,6 +91,7 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
             let { firstName, lastName, h1b_required, resume_uploaded } =
                 userInfo;
             resume_uploaded = true;
+            const skills = resumeData?.uploadResumeFile?.skills;
 
             updateUserProfile({
                 variables: {
@@ -86,7 +100,8 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
                         firstName,
                         lastName,
                         h1b_required,
-                        resume_uploaded
+                        resume_uploaded,
+                        skills
                     }
                 }
             })
@@ -102,7 +117,8 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
     const uploadFile = () => {
         if (files[0]) {
             const file = files[0];
-            uploadResumeFile({ variables: { file, userId } });
+            const existing_skills = userInfo?.skills;
+            uploadResumeFile({ variables: { file, userId, existing_skills } });
         }
     };
 

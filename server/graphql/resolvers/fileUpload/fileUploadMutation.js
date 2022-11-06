@@ -12,73 +12,35 @@ AWS.config.update({
     secretAccessKey: config.AWS_SECRET_KEY
 });
 
-const extractAndUpdateSkills = async (userId, file_path) => {
+const extractSkills = async (userId, file_path) => {
     let options = {
         pythonPath: config.PYTHON_PATH,
         scriptPath: 'graphql/resolvers/fileUpload',
         args: [file_path]
     };
 
-    let documentClient = new AWS.DynamoDB.DocumentClient();
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run(
+            'extractSkills.py',
+            options,
+            async function (err, results) {
+                if (err) {
+                    throw new GraphQLError(err.message);
+                }
 
-    await PythonShell.run(
-        'extractSkills.py',
-        options,
-        async function (err, results) {
-            if (err) {
-                throw new GraphQLError(err.message);
+                await fs.unlink(file_path, function (err) {});
+                if (err) return reject(err);
+                return resolve(results);
             }
-
-            await fs.unlink(file_path, function (err) {});
-
-            await fetch(config.SERVER_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    query: `
-                        query getUserByID($userId: ID!) {
-                            getUserDataById(userId: $userId) {
-                                skills
-                            }
-                        }
-                    `,
-                    variables: { userId }
-                })
-            })
-                .then((res) => res.json())
-                .then(async (result) => {
-                    const final_skills = [
-                        ...result.data.getUserDataById.skills,
-                        ...results
-                    ];
-
-                    var params = {
-                        TableName: config.DATABASE_NAME,
-                        ExpressionAttributeNames: {
-                            '#skills': 'skills'
-                        },
-                        ExpressionAttributeValues: {
-                            ':skills': final_skills
-                        },
-                        Key: {
-                            PK: userId
-                        },
-                        ReturnValues: 'ALL_NEW',
-                        UpdateExpression: 'SET #skills = :skills'
-                    };
-                    try {
-                        await documentClient.update(params).promise();
-                    } catch (err) {
-                        throw new GraphQLError(err.message);
-                    }
-                });
-        }
-    );
+        );
+    });
+    return result;
 };
 
-const uploadResumeFile = async (parent, { file, userId }) => {
+const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
     const { createReadStream, filename, mimetype, encoding } = await file;
     const s3 = new AWS.S3();
+    const documentClient = new AWS.DynamoDB.DocumentClient();
 
     const stream = createReadStream();
 
@@ -97,11 +59,34 @@ const uploadResumeFile = async (parent, { file, userId }) => {
 
     try {
         await s3.upload(resumeFileParams).promise();
-        await extractAndUpdateSkills(userId, file_path);
-        // await fs.unlink(file_path, function (err) {});
+        let skills = await extractSkills(userId, file_path);
+        const final_skills = [...existing_skills, ...skills];
+
+        var params = {
+            TableName: config.DATABASE_NAME,
+            ExpressionAttributeNames: {
+                '#skills': 'skills'
+            },
+            ExpressionAttributeValues: {
+                ':skills': final_skills
+            },
+            Key: {
+                PK: userId
+            },
+            ReturnValues: 'ALL_NEW',
+            UpdateExpression: 'SET #skills = :skills'
+        };
+
+        try {
+            await documentClient.update(params).promise();
+        } catch (err) {
+            throw new GraphQLError(err.message);
+        }
+
         return {
             status: 200,
-            message: 'File uploaded successfully'
+            message: 'File uploaded successfully',
+            skills: final_skills
         };
     } catch (err) {
         throw new GraphQLError(err.message);

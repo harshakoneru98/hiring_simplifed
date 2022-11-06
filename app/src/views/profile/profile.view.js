@@ -123,11 +123,8 @@ export default function ProfileView() {
     }, [userInfo]);
 
     useEffect(() => {
-        const options = [];
         if (userInfo?.skills) {
-            userInfo?.skills?.map((skill) => {
-                options.push({ value: skill, label: skill });
-            });
+            const options = skillsToOptions(userInfo?.skills);
             setSkillOptions(options);
             setTotalSkills(options);
         }
@@ -140,6 +137,14 @@ export default function ProfileView() {
             setIframeKey(iframeKey + 1);
         }
     }, [refreshNeeded]);
+
+    const skillsToOptions = (userSkills) => {
+        const options = [];
+        userSkills?.map((skill) => {
+            options.push({ value: skill, label: skill });
+        });
+        return options;
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -157,6 +162,12 @@ export default function ProfileView() {
         setFunction('firstNameValid', true, 'valid');
         setFunction('lastNameValid', true, 'valid');
         setFunction('h1bValid', true, 'valid');
+    };
+
+    const editSkillsFalse = () => {
+        setEditSkillsInfo(false);
+        const options = skillsToOptions(userInfo.skills);
+        setSkillOptions(options);
     };
 
     const editPersonal = () => {
@@ -207,6 +218,34 @@ export default function ProfileView() {
                 });
             setEditPersonalInfo(false);
         }
+    };
+
+    const editSkills = () => {
+        const skills = [];
+        skillOptions?.map((skill) => {
+            skills.push(skill.value);
+        });
+
+        const { firstName, lastName, h1b_required, resume_uploaded } = userInfo;
+        updateUserProfile({
+            variables: {
+                input: {
+                    userId,
+                    firstName,
+                    lastName,
+                    h1b_required,
+                    resume_uploaded,
+                    skills
+                }
+            }
+        })
+            .then((data) => {
+                refetch();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        setEditSkillsInfo(false);
     };
 
     const handleSkillChange = (skills) => {
@@ -361,18 +400,38 @@ export default function ProfileView() {
                                                         />
                                                     </Button>
                                                 )}
+                                                {editSkillsInfo && (
+                                                    <Fragment>
+                                                        <Button
+                                                            className="edit-cancel-button"
+                                                            variant="danger"
+                                                            onClick={
+                                                                editSkillsFalse
+                                                            }
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                        <Button
+                                                            className="edit-submit-button"
+                                                            variant="success"
+                                                            onClick={editSkills}
+                                                        >
+                                                            Submit
+                                                        </Button>
+                                                    </Fragment>
+                                                )}
                                             </td>
                                             <td>
                                                 <Fragment>
                                                     <Button
-                                                        className="cancel-button"
+                                                        className="resume-upload-button"
                                                         variant="danger"
                                                         onClick={handleShow}
                                                     >
                                                         Upload
                                                     </Button>
                                                     <Button
-                                                        className="submit-button"
+                                                        className="resume-preview-button"
                                                         variant="success"
                                                         onClick={openResume}
                                                     >

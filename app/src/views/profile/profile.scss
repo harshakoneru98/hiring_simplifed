@@ -14,11 +14,11 @@ $button-color: #137dc5;
     }
 }
 
-.edit-button, .submit-button, .cancel-button, .edit-skills-button{
+.edit-button, .submit-button, .cancel-button, .edit-skills-button, .edit-cancel-button, .resume-upload-button{
     float: right;
 }
 
-.submit-button{
+.submit-button, .edit-submit-button, .resume-preview-button{
     float: right;
     margin-right: 20px;
 }
@@ -41,7 +41,7 @@ $button-color: #137dc5;
     margin-bottom: 40px;
 }
 
-.edit-skills-button{
+.edit-skills-button, .edit-cancel-button, .edit-submit-button, .resume-upload-button, .resume-preview-button{
     margin-bottom: 20px;
 }
 

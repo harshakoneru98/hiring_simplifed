@@ -44,21 +44,25 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
 
     const stream = createReadStream();
 
-    const resumeFileParams = {
-        Bucket: config.RESUME_BUCKET,
-        Key: userId + '.pdf',
-        Body: stream,
-        ContentDisposition: 'inline',
-        ContentType: 'application/pdf'
-    };
-
     const file_path =
         './graphql/resolvers/fileUpload/resumes/' + userId + '.pdf';
     const out = fs.createWriteStream(file_path);
     stream.pipe(out);
 
     try {
-        await s3.upload(resumeFileParams).promise();
+        out.on('finish', async function () {
+            const fileContent = fs.readFileSync(file_path);
+            const resumeFileParams = {
+                Bucket: config.RESUME_BUCKET,
+                Key: userId + '.pdf',
+                Body: fileContent,
+                ContentDisposition: 'inline',
+                ContentType: 'application/pdf'
+            };
+
+            await s3.upload(resumeFileParams).promise();
+        });
+
         let skills = await extractSkills(userId, file_path);
         const final_skills = [...existing_skills, ...skills];
 

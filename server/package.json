@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@neo4j/graphql": "^3.12.0",
     "apollo-server": "^3.10.3",
     "apollo-server-express": "^3.11.1",
     "aws-sdk": "^2.1233.0",
@@ -20,6 +21,7 @@
     "graphql": "^16.6.0",
     "graphql-upload": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
+    "neo4j-driver": "^5.2.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.2.10",
     "nodemon": "^2.0.20",

@@ -61,6 +61,10 @@ export const typeDefs = gql`
         resume_uploaded: Boolean!
     }
 
+    type SKILL {
+        name: String!
+    }
+
     type Query {
         login(email: String!, password: String!): AuthData!
         getUserDataById(userId: ID!): UserMetaData!

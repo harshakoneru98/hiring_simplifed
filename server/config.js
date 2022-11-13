@@ -10,6 +10,9 @@ const AUTH_KEY = process.env.AUTH_KEY;
 const RESUME_BUCKET = process.env.RESUME_BUCKET;
 const PYTHON_PATH = process.env.PYTHON_PATH;
 const SERVER_URL = process.env.SERVER_URL;
+const NEO4J_USER = process.env.NEO4J_USER;
+const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD;
+const NEO4J_URI = process.env.NEO4J_URI;
 
 export default {
     AWS_ACCESS_KEY,
@@ -20,5 +23,8 @@ export default {
     AUTH_KEY,
     RESUME_BUCKET,
     PYTHON_PATH,
-    SERVER_URL
+    SERVER_URL,
+    NEO4J_USER,
+    NEO4J_PASSWORD,
+    NEO4J_URI
 };

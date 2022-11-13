@@ -4,7 +4,7 @@ import Upload from 'graphql-upload/Upload.mjs';
 export const typeDefs = gql`
     scalar Upload
 
-    type User {
+    type User @exclude {
         firstName: String!
         lastName: String!
         h1b_required: Boolean!
@@ -12,10 +12,6 @@ export const typeDefs = gql`
         password: String!
         skills: [String]
         resume_uploaded: Boolean!
-    }
-
-    type Query {
-        user(email: String!): User!
     }
 
     input createUserInput {
@@ -35,24 +31,24 @@ export const typeDefs = gql`
         skills: [String]
     }
 
-    type messageResponse {
+    type messageResponse @exclude {
         status: Int!
         message: String!
     }
 
-    type skillsMessageResponse {
+    type skillsMessageResponse @exclude {
         status: Int!
         message: String!
         skills: [String]
     }
 
-    type AuthData {
+    type AuthData @exclude {
         userId: ID!
         token: String!
         tokenExpiration: Int!
     }
 
-    type UserMetaData {
+    type UserMetaData @exclude {
         firstName: String!
         lastName: String!
         h1b_required: Boolean!
@@ -61,11 +57,12 @@ export const typeDefs = gql`
         resume_uploaded: Boolean!
     }
 
-    type SKILL {
+    type SKILL @exclude(operations: [CREATE, UPDATE, DELETE]) {
         name: String!
     }
 
     type Query {
+        user(email: String!): User!
         login(email: String!, password: String!): AuthData!
         getUserDataById(userId: ID!): UserMetaData!
     }

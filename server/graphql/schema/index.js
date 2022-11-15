@@ -57,7 +57,7 @@ export const typeDefs = gql`
         resume_uploaded: Boolean!
     }
 
-    type SKILL @exclude(operations: [CREATE, UPDATE, DELETE]) {
+    type Skill @exclude(operations: [CREATE, UPDATE, DELETE]) {
         name: String!
     }
 

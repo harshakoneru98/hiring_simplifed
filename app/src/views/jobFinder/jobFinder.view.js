@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default function JobSearchView() {
+export default function JobFinderView() {
     return (
         <div className="container">
             <div className="row">
                 <div className="main_content">
                     <div className="content">
-                        <h1>Welcome to Job Search</h1>
+                        <h1>Welcome to Job Finder</h1>
                     </div>
                 </div>
             </div>

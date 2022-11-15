@@ -35,6 +35,14 @@ const QUERY_USER_DATA = gql`
     }
 `;
 
+const QUERY_SKILLS = gql`
+    query Skills {
+        skills(options: { sort: [{ name: ASC }] }) {
+            name
+        }
+    }
+`;
+
 export default function ProfileView() {
     const dispatch = useDispatch();
     const animatedComponents = makeAnimated();
@@ -84,6 +92,13 @@ export default function ProfileView() {
         variables: { userId }
     });
 
+    const {
+        data: skillsData,
+        loading: skillsLoading,
+        error: skillsError,
+        refetchSkills
+    } = useQuery(QUERY_SKILLS);
+
     const [
         updateUserProfile,
         {
@@ -124,11 +139,18 @@ export default function ProfileView() {
 
     useEffect(() => {
         if (userInfo?.skills) {
-            const options = skillsToOptions(userInfo?.skills);
+            const options = skillsToOptions(userInfo?.skills, 'DynamoDB');
             setSkillOptions(options);
-            setTotalSkills(options);
         }
     }, [userData, userInfo]);
+
+    useEffect(() => {
+        if (skillsData) {
+            const fullSkills = [];
+            const options = skillsToOptions(skillsData?.skills, 'Neo4j');
+            setTotalSkills(options);
+        }
+    }, [skillsData]);
 
     useEffect(() => {
         if (refreshNeeded) {
@@ -138,11 +160,18 @@ export default function ProfileView() {
         }
     }, [refreshNeeded]);
 
-    const skillsToOptions = (userSkills) => {
+    const skillsToOptions = (userSkills, type) => {
         const options = [];
-        userSkills?.map((skill) => {
-            options.push({ value: skill, label: skill });
-        });
+        if (type == 'DynamoDB') {
+            userSkills?.map((skill) => {
+                options.push({ value: skill, label: skill });
+            });
+        } else {
+            userSkills?.map((skill) => {
+                options.push({ value: skill.name, label: skill.name });
+            });
+        }
+
         return options;
     };
 
@@ -166,7 +195,7 @@ export default function ProfileView() {
 
     const editSkillsFalse = () => {
         setEditSkillsInfo(false);
-        const options = skillsToOptions(userInfo.skills);
+        const options = skillsToOptions(userInfo.skills, 'DynamoDB');
         setSkillOptions(options);
     };
 

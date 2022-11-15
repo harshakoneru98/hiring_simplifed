@@ -17,7 +17,7 @@ import RegisterView from './views/register/register.view';
 import DashboardView from './views/dashboard/dashboard.view';
 import ProfileView from './views/profile/profile.view';
 import ResumeView from './views/resume/resume.view';
-import JobSearchView from './views/jobSearch/jobSearch.view';
+import JobFinderView from './views/jobFinder/jobFinder.view';
 import InterviewPrepView from './views/interviewPrep/interviewPrep.view';
 
 function App() {
@@ -134,9 +134,9 @@ function App() {
                                         element={<ProfileView />}
                                     />
                                     <Route
-                                        path="/job-search"
+                                        path="/job-finder"
                                         exact
-                                        element={<JobSearchView />}
+                                        element={<JobFinderView />}
                                     />
                                     <Route
                                         path="/interview-prep"

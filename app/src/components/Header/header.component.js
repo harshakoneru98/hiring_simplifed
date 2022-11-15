@@ -106,9 +106,9 @@ export default function Header() {
                                     >
                                         <NavDropdown.Item
                                             as={Link}
-                                            to="/job-search"
+                                            to="/job-finder"
                                         >
-                                            Job Search
+                                            Job Finder
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item

@@ -16,7 +16,10 @@ const extractSkills = async (userId, file_path) => {
     let options = {
         pythonPath: config.PYTHON_PATH,
         scriptPath: 'graphql/resolvers/fileUpload',
-        args: [file_path]
+        args: [
+            file_path,
+            './graphql/resolvers/fileUpload/skills_embeddings.json'
+        ]
     };
 
     const result = await new Promise((resolve, reject) => {
@@ -64,7 +67,7 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         });
 
         let skills = await extractSkills(userId, file_path);
-        const final_skills = [...existing_skills, ...skills];
+        const final_skills = [...existing_skills, ...skills].sort();
 
         var params = {
             TableName: config.DATABASE_NAME,

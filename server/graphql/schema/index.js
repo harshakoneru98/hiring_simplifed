@@ -61,6 +61,53 @@ export const typeDefs = gql`
         name: String!
     }
 
+    type City @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        jobs: [Job!]! @relationship(type: "City_has_job", direction: OUT)
+    }
+
+    type State @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        jobs: [Job!]! @relationship(type: "State_has_job", direction: OUT)
+    }
+
+    type Company @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        jobs: [Job!]! @relationship(type: "Has_Job", direction: OUT)
+        company_type: Comp_Type! @relationship(type: "type_of", direction: OUT)
+    }
+
+    type Comp_Type @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        companies: [Company!]! @relationship(type: "type_of", direction: IN)
+    }
+
+    type Education_Level @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        jobs: [Job!]! @relationship(type: "Requires_degree", direction: IN)
+    }
+
+    type Job_Family @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: String!
+        jobs: [Job!]! @relationship(type: "family_has_job", direction: OUT)
+    }
+
+    type Job @exclude(operations: [CREATE, UPDATE, DELETE]) {
+        name: Int!
+        H1B_flag: Int!
+        JD: String!
+        Salary: Int!
+        Title: String!
+        job_url: String!
+        job_family: Job_Family!
+            @relationship(type: "has_job_family", direction: OUT)
+        city: City! @relationship(type: "Located_in_City", direction: OUT)
+        state: State! @relationship(type: "Located_in_State", direction: OUT)
+        company: Company! @relationship(type: "Work_4_Company", direction: OUT)
+        education: [Education_Level!]!
+            @relationship(type: "Requires_degree", direction: OUT)
+    }
+
     type Query {
         user(email: String!): User!
         login(email: String!, password: String!): AuthData!

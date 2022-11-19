@@ -43,7 +43,9 @@ function App() {
 
     const client = new ApolloClient({
         link: authLink.concat(uploadLink),
-        cache: new InMemoryCache()
+        cache: new InMemoryCache({
+            addTypename: false
+        })
     });
 
     let login = (token, userId, tokenExpiration) => {

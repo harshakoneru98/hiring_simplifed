@@ -59,6 +59,7 @@ export const typeDefs = gql`
 
     type Skill @exclude(operations: [CREATE, UPDATE, DELETE]) {
         name: String!
+        jobs: [Job!]! @relationship(type: "Requires_Skill", direction: IN)
     }
 
     type City @exclude(operations: [CREATE, UPDATE, DELETE]) {
@@ -97,6 +98,8 @@ export const typeDefs = gql`
         H1B_flag: Int!
         JD: String!
         Salary: Int!
+        Work_Min: Int!
+        Work_Max: Int!
         Title: String!
         job_url: String!
         job_family: Job_Family!
@@ -106,6 +109,8 @@ export const typeDefs = gql`
         company: Company! @relationship(type: "Work_4_Company", direction: OUT)
         education: [Education_Level!]!
             @relationship(type: "Requires_degree", direction: OUT)
+        req_skills: [Skill!]!
+            @relationship(type: "Requires_Skill", direction: OUT)
     }
 
     type Query {

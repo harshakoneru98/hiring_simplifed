@@ -1,32 +1,76 @@
-.job-search-header{
+.job-search-header {
     margin-top: 30px;
     text-align: center;
 }
 
 .job-search-table {
-    margin:30px 0px;
+    margin: 30px 0px 100px 0px;
 
     thead th {
         font-weight: bold;
     }
 
-    a{
+    a {
         text-decoration: none;
     }
 }
 
-.skills-text{
+.skills-text {
     text-align: left;
 }
 
-.job-description-text{
+.job-description-text {
     text-align: justify;
 }
 
-.job-description{
+.job-description {
     margin-top: 20px;
 }
 
-.table-footer p{
-    margin: 0 !important;
+.table-footer {
+    border-top: 1px solid rgba(224, 224, 224, 1);;
+    td {
+        display: table-cell;
+        vertical-align: inherit;
+        overflow: auto;
+        text-align: left;
+
+        .table-footer-div{
+            position: relative;
+            display: flex;
+            min-height: 52px;
+            padding: 0px 24px;
+            align-items: center;
+            float: right;
+        }
+
+        p {
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-weight: 400;
+            font-size: 0.875rem;
+            line-height: 1.43;
+            letter-spacing: 0.01071em;
+            margin: 0 !important;
+        }
+
+        .row-select{
+            margin: 0px 20px;
+            select {
+                font-size: 13px;
+                border: 0 !important;
+                cursor: pointer;
+                width: auto;
+                appearance: none;
+                background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path stroke='grey' fill='grey' d='M6 8l-1 1l5 5l5-5l-1-1l-4 4l-4-4z'/></svg>");
+                background-repeat: no-repeat, repeat;
+                background-position: 1.6em;
+                background-size: 1.5em auto, 100%;
+            }
+    
+            select:focus {
+                outline: none;
+            }
+        }
+    }
+
 }

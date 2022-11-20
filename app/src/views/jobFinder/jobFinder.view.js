@@ -20,6 +20,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 import './jobFinder.scss';
 
@@ -31,38 +32,32 @@ const QUERY_USER_DATA = gql`
     }
 `;
 
+const QUERY_TOTAL_JOBS = gql`
+    query JobsAggregate {
+        jobsAggregate {
+            count
+        }
+    }
+`;
+
 const QUERY_JOB_DATA = gql`
-    query Skills($options: JobOptions) {
-        jobs(options: $options) {
+    query Jobs($input: jobDataInput!) {
+        getJobData(input: $input) {
             name
-            Title
-            city {
-                name
-            }
-            state {
-                name
-            }
-            company {
-                name
-                company_type {
-                    name
-                }
-            }
-            job_family {
-                name
-            }
-            education {
-                name
-            }
-            H1B_flag
-            JD
-            Salary
-            Work_Min
-            Work_Max
+            title
+            h1b
+            jd
             job_url
-            req_skills {
-                name
-            }
+            job_family
+            company
+            company_type
+            salary
+            city
+            state
+            max_work_exp
+            min_work_exp
+            education
+            skills
         }
     }
 `;
@@ -188,8 +183,8 @@ Row.propTypes = {
 function createData(data, skills) {
     const final_data = [];
 
-    data?.jobs.map((job) => {
-        const job_skills = job.req_skills.map((skill) => skill.name);
+    data?.getJobData.map((job) => {
+        const job_skills = job.skills;
         const matching_skills = job_skills.filter((element) =>
             skills.includes(element)
         );
@@ -197,20 +192,20 @@ function createData(data, skills) {
             (element) => !skills.includes(element)
         );
         final_data.push({
-            title: job.Title,
-            company: job.company.name,
-            salary: job.Salary,
+            title: job.title,
+            company: job.company,
+            salary: job.salary,
             job_url: job.job_url,
-            job_family: job.job_family.name,
-            company_type: job.company.company_type.name,
-            city: job.city.name,
-            state: job.state.name,
-            education: job.education.map((edu) => edu.name),
-            h1b: job.H1B_flag,
+            job_family: job.job_family,
+            company_type: job.company_type,
+            city: job.city,
+            state: job.state,
+            education: job.education,
+            h1b: job.h1b,
             matching_skills: matching_skills,
             missing_skills: missing_skills,
-            min_work_exp: job.Work_Min,
-            job_description: job.JD
+            min_work_exp: job.min_work_exp,
+            job_description: job.jd
         });
     });
     return final_data;
@@ -219,44 +214,55 @@ function createData(data, skills) {
 export default function JobFinderView() {
     const userId = localStorage.getItem('userId');
 
-    const {
-        data: userData,
-        loading: userLoading,
-        error: userError
-    } = useQuery(QUERY_USER_DATA, {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const { data: jobCount } = useQuery(QUERY_TOTAL_JOBS);
+
+    const { data: userData } = useQuery(QUERY_USER_DATA, {
         variables: { userId }
     });
 
     const {
         data: jobData,
         loading: jobLoading,
-        error: jobError
+        refetch
     } = useQuery(QUERY_JOB_DATA, {
         variables: {
-            options: {
-                limit: 12
+            input: {
+                limit: rowsPerPage,
+                offset: page * rowsPerPage
             }
         }
     });
 
     const [tableData, setTableData] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     useEffect(() => {
-        if (jobData && userData) {
+        if (jobData && !jobLoading && userData) {
             const updated_job_data = createData(
                 jobData,
                 userData.getUserDataById.skills
             );
-            console.log('Updated Data : ', updated_job_data);
             setTableData(updated_job_data);
         }
-    }, [jobData, userData]);
+    }, [jobData, userData, jobLoading]);
+
+    useEffect(() => {
+        refetch({
+            input: {
+                limit: rowsPerPage,
+                offset: page * rowsPerPage
+            }
+        });
+    }, [page, rowsPerPage]);
 
     const emptyRows =
         page > 0
-            ? Math.max(0, (1 + page) * rowsPerPage - tableData?.length)
+            ? Math.max(
+                  0,
+                  (1 + page) * rowsPerPage - jobCount?.jobsAggregate?.count
+              )
             : 0;
 
     const handleChangePage = (event, newPage) => {
@@ -276,7 +282,7 @@ export default function JobFinderView() {
     };
 
     const handleLastPageButtonClick = (event) => {
-        const count = tableData?.length;
+        const count = jobCount?.jobsAggregate?.count;
         handleChangePage(
             event,
             Math.max(0, Math.ceil(count / rowsPerPage) - 1)
@@ -295,6 +301,9 @@ export default function JobFinderView() {
                     <h2 className="job-search-header">
                         Ready to find your next Job?
                     </h2>
+                    <p className="filter-popup">
+                        Filters <FilterListIcon />
+                    </p>
                     <TableContainer
                         component={Paper}
                         className="job-search-table"
@@ -316,13 +325,7 @@ export default function JobFinderView() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {(rowsPerPage > 0
-                                    ? tableData?.slice(
-                                          page * rowsPerPage,
-                                          page * rowsPerPage + rowsPerPage
-                                      )
-                                    : tableData
-                                )?.map((row) => (
+                                {tableData?.map((row) => (
                                     <Row key={row.name} row={row} />
                                 ))}
 
@@ -335,7 +338,7 @@ export default function JobFinderView() {
                                 )}
                             </TableBody>
                             <TableFooter className="table-footer">
-                                <td colspan={12}>
+                                <td colSpan={12}>
                                     <div className="table-footer-div">
                                         <p>Rows per page:</p>
                                         <div className="row-select">
@@ -362,17 +365,19 @@ export default function JobFinderView() {
                                             </select>
                                         </div>
                                         <p>
-                                            {page * rowsPerPage +
-                                                1 +
+                                            {(jobCount?.jobsAggregate?.count
+                                                ? page * rowsPerPage + 1
+                                                : 0) +
                                                 ' - ' +
                                                 (page * rowsPerPage +
                                                     rowsPerPage <
-                                                tableData?.length
+                                                jobCount?.jobsAggregate?.count
                                                     ? page * rowsPerPage +
                                                       rowsPerPage
-                                                    : tableData?.length) +
+                                                    : jobCount?.jobsAggregate
+                                                          ?.count) +
                                                 ' of ' +
-                                                tableData?.length}
+                                                jobCount?.jobsAggregate?.count}
                                         </p>
                                         <Box sx={{ flexShrink: 0, ml: 2.5 }}>
                                             <IconButton
@@ -396,7 +401,8 @@ export default function JobFinderView() {
                                                 disabled={
                                                     page >=
                                                     Math.ceil(
-                                                        tableData?.length /
+                                                        jobCount?.jobsAggregate
+                                                            ?.count /
                                                             rowsPerPage
                                                     ) -
                                                         1
@@ -412,7 +418,8 @@ export default function JobFinderView() {
                                                 disabled={
                                                     page >=
                                                     Math.ceil(
-                                                        tableData?.length /
+                                                        jobCount?.jobsAggregate
+                                                            ?.count /
                                                             rowsPerPage
                                                     ) -
                                                         1

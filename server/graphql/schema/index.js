@@ -113,10 +113,34 @@ export const typeDefs = gql`
             @relationship(type: "Requires_Skill", direction: OUT)
     }
 
+    type JobData @exclude {
+        name: Int!
+        title: String!
+        h1b: String!
+        jd: String!
+        salary: Int!
+        job_url: String!
+        min_work_exp: Int!
+        max_work_exp: Int!
+        job_family: String!
+        city: String!
+        state: String!
+        company: String!
+        company_type: String!
+        education: [String!]!
+        skills: [String!]!
+    }
+
+    input jobDataInput {
+        limit: Int!
+        offset: Int!
+    }
+
     type Query {
         user(email: String!): User!
         login(email: String!, password: String!): AuthData!
         getUserDataById(userId: ID!): UserMetaData!
+        getJobData(input: jobDataInput!): [JobData!]!
     }
 
     type Mutation {

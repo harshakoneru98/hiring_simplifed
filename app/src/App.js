@@ -18,7 +18,6 @@ import DashboardView from './views/dashboard/dashboard.view';
 import ProfileView from './views/profile/profile.view';
 import ResumeView from './views/resume/resume.view';
 import JobFinderView from './views/jobFinder/jobFinder.view';
-import InterviewPrepView from './views/interviewPrep/interviewPrep.view';
 
 function App() {
     const [token, setToken] = useState(null);
@@ -139,11 +138,6 @@ function App() {
                                         path="/job-finder"
                                         exact
                                         element={<JobFinderView />}
-                                    />
-                                    <Route
-                                        path="/interview-prep"
-                                        exact
-                                        element={<InterviewPrepView />}
                                     />
                                 </Fragment>
                             )}

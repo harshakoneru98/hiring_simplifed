@@ -2,7 +2,6 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { gql, useQuery } from '@apollo/client';
 import AuthContext from '../../context/auth-context';
@@ -100,24 +99,17 @@ export default function Header() {
                             )}
                             {!authPages && (
                                 <Nav>
-                                    <NavDropdown
-                                        title="Services"
-                                        id="basic-nav-dropdown"
+                                    <Nav.Link
+                                        as={Link}
+                                        to="/job-finder"
+                                        className={
+                                            path === '/job-finder'
+                                                ? 'nav-highlight'
+                                                : ''
+                                        }
                                     >
-                                        <NavDropdown.Item
-                                            as={Link}
-                                            to="/job-finder"
-                                        >
-                                            Job Finder
-                                        </NavDropdown.Item>
-                                        <NavDropdown.Divider />
-                                        <NavDropdown.Item
-                                            as={Link}
-                                            to="/interview-prep"
-                                        >
-                                            Interview Prep
-                                        </NavDropdown.Item>
-                                    </NavDropdown>
+                                        Job Finder
+                                    </Nav.Link>
                                     <Nav.Link
                                         as={Link}
                                         to="/profile"

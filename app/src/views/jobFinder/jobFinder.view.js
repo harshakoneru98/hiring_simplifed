@@ -21,6 +21,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 import './jobFinder.scss';
 
@@ -237,6 +239,10 @@ export default function JobFinderView() {
     });
 
     const [tableData, setTableData] = useState([]);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         if (jobData && !jobLoading && userData) {
@@ -301,9 +307,29 @@ export default function JobFinderView() {
                     <h2 className="job-search-header">
                         Ready to find your next Job?
                     </h2>
-                    <p className="filter-popup">
+                    <p className="filter-popup" onClick={handleShow}>
                         Filters <FilterListIcon />
                     </p>
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Filter Jobs</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            I will not close if you click outside me. Don't even
+                            try to press escape key.
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>
+                                Cancel
+                            </Button>
+                            <Button variant="success">Apply</Button>
+                        </Modal.Footer>
+                    </Modal>
                     <TableContainer
                         component={Paper}
                         className="job-search-table"

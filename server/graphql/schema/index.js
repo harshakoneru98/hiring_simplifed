@@ -116,7 +116,7 @@ export const typeDefs = gql`
     type JobData @exclude {
         name: Int!
         title: String!
-        h1b: String!
+        h1b: Int!
         jd: String!
         salary: Int!
         job_url: String!

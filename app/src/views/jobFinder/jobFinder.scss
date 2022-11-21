@@ -79,3 +79,25 @@
     }
 
 }
+
+.filter-modal{
+    width: 100% !important;
+
+    .modal-dialog{
+        width: 100%;
+        max-width: max-content;
+
+        .modal-content{
+            width: 80vw;
+
+            .filter_header{
+                margin-bottom: 20px;
+            }
+
+            .row p{
+                margin-bottom: 2px !important;
+            }
+        }
+    }
+
+}

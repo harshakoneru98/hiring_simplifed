@@ -22,8 +22,18 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-
+import Button from '@mui/material/Button';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import SliderField from '../../components/Slider/slider.component';
+import RangeSliderField from '../../components/RangeSlider/rangeSlider.component';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
+import { updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
 
 const QUERY_USER_DATA = gql`
@@ -64,7 +74,7 @@ const QUERY_JOB_DATA = gql`
     }
 `;
 
-function Row(props) {
+function JobRow(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
@@ -163,7 +173,7 @@ function Row(props) {
     );
 }
 
-Row.propTypes = {
+JobRow.propTypes = {
     row: PropTypes.shape({
         title: PropTypes.string,
         company: PropTypes.string,
@@ -214,10 +224,27 @@ function createData(data, skills) {
 }
 
 export default function JobFinderView() {
+    const dispatch = useDispatch();
     const userId = localStorage.getItem('userId');
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const filterInfo = useSelector((state) => state?.filter);
+    const finalFilterInfo = useSelector((state) => state?.finalFilter);
+
+    const defaultFilters = {
+        experience: 0,
+        salary: [50, 300]
+    };
+
+    useEffect(() => {
+        console.log('Filters : ', filterInfo);
+    }, [filterInfo]);
+
+    useEffect(() => {
+        console.log('Final Filters : ', finalFilterInfo);
+    }, [finalFilterInfo]);
 
     const { data: jobCount } = useQuery(QUERY_TOTAL_JOBS);
 
@@ -240,6 +267,12 @@ export default function JobFinderView() {
 
     const [tableData, setTableData] = useState([]);
     const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        if (!show) {
+            dispatch(updateFilters(finalFilterInfo));
+        }
+    }, [show]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -300,6 +333,16 @@ export default function JobFinderView() {
         setPage(0);
     };
 
+    const handleClearFilters = () => {
+        dispatch(updateFilters(defaultFilters));
+        dispatch(updateFinalFilters(defaultFilters));
+    };
+
+    const handleSubmitFilters = () => {
+        dispatch(updateFinalFilters(filterInfo));
+        setShow(false);
+    };
+
     return (
         <div className="container job-search-container">
             <div className="row">
@@ -315,19 +358,80 @@ export default function JobFinderView() {
                         onHide={handleClose}
                         backdrop="static"
                         keyboard={false}
+                        className="filter-modal"
                     >
                         <Modal.Header closeButton>
-                            <Modal.Title>Filter Jobs</Modal.Title>
+                            <Modal.Title>Want to narrow Jobs?</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            I will not close if you click outside me. Don't even
-                            try to press escape key.
+                            <Container>
+                                <Row>
+                                    <Col xs={8}>
+                                        <Typography
+                                            variant="h6"
+                                            className="filter_header"
+                                        >
+                                            Filter Jobs
+                                        </Typography>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <Typography
+                                            variant="h6"
+                                            className="filter_header"
+                                        >
+                                            Sort Attributes
+                                        </Typography>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs={4}>
+                                        <p>Work Experience</p>
+                                        <SliderField
+                                            defaultValue={
+                                                finalFilterInfo?.experience
+                                            }
+                                            step={1}
+                                            min={0}
+                                            max={10}
+                                        />
+                                    </Col>
+                                    <Col xs={4}>
+                                        <p>Salary</p>
+                                        <RangeSliderField
+                                            min_value={
+                                                finalFilterInfo?.salary[0]
+                                            }
+                                            max_value={
+                                                finalFilterInfo?.salary[1]
+                                            }
+                                            step={50}
+                                            min={50}
+                                            max={300}
+                                        />
+                                    </Col>
+                                    <Col xs={4}></Col>
+                                </Row>
+                            </Container>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" onClick={handleClose}>
-                                Cancel
-                            </Button>
-                            <Button variant="success">Apply</Button>
+                            <Stack direction="row" spacing={2}>
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    startIcon={<ClearAllIcon />}
+                                    onClick={handleClearFilters}
+                                >
+                                    Clear
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    endIcon={<SendIcon />}
+                                    onClick={handleSubmitFilters}
+                                >
+                                    Apply
+                                </Button>
+                            </Stack>
                         </Modal.Footer>
                     </Modal>
                     <TableContainer
@@ -352,7 +456,7 @@ export default function JobFinderView() {
                             </TableHead>
                             <TableBody>
                                 {tableData?.map((row) => (
-                                    <Row key={row.name} row={row} />
+                                    <JobRow key={row.name} row={row} />
                                 ))}
 
                                 {emptyRows > 0 && (

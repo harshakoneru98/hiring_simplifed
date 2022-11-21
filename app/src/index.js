@@ -3,15 +3,19 @@ import ReactDOM from 'react-dom/client';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { StyledEngineProvider } from '@mui/material/styles';
+import App from './App';
 import userDataSlice from './reduxSlices/userDataSlice';
 import refreshSlice from './reduxSlices/refreshSlice';
-import App from './App';
+import filterSlice from './reduxSlices/filterSlice';
+import finalFilterSlice from './reduxSlices/finalFilterSlice';
 
 // As of React 18
 const store = configureStore({
     reducer: {
         userData: userDataSlice,
-        refresh: refreshSlice
+        refresh: refreshSlice,
+        filter: filterSlice,
+        finalFilter: finalFilterSlice
     }
 });
 

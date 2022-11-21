@@ -5,7 +5,8 @@ export const finalFilterSlice = createSlice({
     initialState: {
         experience: 0,
         salary: [50, 300],
-        education: [true, true, true]
+        education: [true, true, true],
+        h1b: true
     },
     reducers: {
         updateFinalFilters: (state, action) => {
@@ -13,6 +14,7 @@ export const finalFilterSlice = createSlice({
             state.experience = updated_state.experience;
             state.salary = updated_state.salary;
             state.education = updated_state.education;
+            state.h1b = updated_state.h1b;
         }
     }
 });

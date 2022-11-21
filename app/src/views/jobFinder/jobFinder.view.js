@@ -39,6 +39,7 @@ import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
 import { updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
 import CheckboxEducation from '../../components/Checkbox/checkbox.component';
+import SwitchH1b from '../../components/Switch/switch.component';
 
 const QUERY_USER_DATA = gql`
     query getUserByID($userId: ID!) {
@@ -240,7 +241,8 @@ export default function JobFinderView() {
     const defaultFilters = {
         experience: 0,
         salary: [50, 300],
-        education: [true, true, true]
+        education: [true, true, true],
+        h1b: true
     };
 
     useEffect(() => {
@@ -390,10 +392,16 @@ export default function JobFinderView() {
                                 </Row>
                                 <Col xs={8}>
                                     <Row className="row-margin">
-                                        <p>Education</p>
                                         <CheckboxEducation
                                             checks={finalFilterInfo?.education}
                                         />
+                                        <Col xs={3}></Col>
+                                        <Col xs={3}>
+                                            <p>H-1B required?</p>
+                                            <SwitchH1b
+                                                check={finalFilterInfo?.h1b}
+                                            />
+                                        </Col>
                                     </Row>
                                     <Row className="row-margin">
                                         <Col xs={6}>

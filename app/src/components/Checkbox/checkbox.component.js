@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import { useDispatch, useSelector } from 'react-redux';
 import { modifyEducation } from '../../reduxSlices/filterSlice';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 import './checkbox.scss';
 
 export default function CheckboxEducation({ checks }) {
@@ -22,31 +23,36 @@ export default function CheckboxEducation({ checks }) {
     return (
         <Fragment>
             <Col xs={3}>
-                <FormControlLabel
-                    control={<Checkbox checked={filterInfo[0]} size="small" />}
-                    label="Bachelor Degree"
-                    className="education-label"
-                    name={0}
-                    onChange={handleChange}
-                />
-            </Col>
-            <Col xs={3}>
-                <FormControlLabel
-                    control={<Checkbox checked={filterInfo[1]} size="small" />}
-                    label="Master Degree"
-                    className="education-label"
-                    name={1}
-                    onChange={handleChange}
-                />
-            </Col>
-            <Col xs={3}>
-                <FormControlLabel
-                    control={<Checkbox checked={filterInfo[2]} size="small" />}
-                    label="PhD Degree"
-                    className="education-label"
-                    name={2}
-                    onChange={handleChange}
-                />
+                <p>Education</p>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox checked={filterInfo[0]} size="small" />
+                        }
+                        label="Bachelor Degree"
+                        className="education-label"
+                        name={0}
+                        onChange={handleChange}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox checked={filterInfo[1]} size="small" />
+                        }
+                        label="Master Degree"
+                        className="education-label"
+                        name={1}
+                        onChange={handleChange}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox checked={filterInfo[2]} size="small" />
+                        }
+                        label="PhD Degree"
+                        className="education-label"
+                        name={2}
+                        onChange={handleChange}
+                    />
+                </FormGroup>
             </Col>
         </Fragment>
     );

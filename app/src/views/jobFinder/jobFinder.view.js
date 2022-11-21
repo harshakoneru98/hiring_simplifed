@@ -467,6 +467,14 @@ export default function JobFinderView() {
                                             <p>Location</p>
                                         </Col>
                                     </Row>
+                                    <Row className="row-margin">
+                                        <Col xs={6}>
+                                            <p>Company Type</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <p>Companies</p>
+                                        </Col>
+                                    </Row>
                                 </Col>
                                 <Col xs={4}></Col>
                             </Container>

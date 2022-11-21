@@ -243,7 +243,30 @@ export default function JobFinderView() {
         experience: 0,
         salary: [50, 300],
         education: [true, true, true],
-        h1b: true
+        h1b: true,
+        job_family: [
+            {
+                name: 'Business Analyst'
+            },
+            {
+                name: 'Data Engineer'
+            },
+            {
+                name: 'Data Scientist'
+            },
+            {
+                name: 'Hardware Engineer'
+            },
+            {
+                name: 'Machine Learning Engineer'
+            },
+            {
+                name: 'Product Manager'
+            },
+            {
+                name: 'Software Development Engineer'
+            }
+        ]
     };
 
     useEffect(() => {
@@ -434,7 +457,11 @@ export default function JobFinderView() {
                                     <Row className="row-margin">
                                         <Col xs={6}>
                                             <p>Job Family</p>
-                                            <JobDropdown />
+                                            <JobDropdown
+                                                check={
+                                                    finalFilterInfo?.job_family
+                                                }
+                                            />
                                         </Col>
                                         <Col xs={6}>
                                             <p>Location</p>

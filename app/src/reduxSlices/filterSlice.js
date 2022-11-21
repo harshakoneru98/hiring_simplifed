@@ -7,8 +7,31 @@ export const filterSlice = createSlice({
         salary: [50, 300],
         education: [true, true, true],
         h1b: true,
-        job_family: []
+        job_family: [
+            {
+                name: 'Business Analyst'
+            },
+            {
+                name: 'Data Engineer'
+            },
+            {
+                name: 'Data Scientist'
+            },
+            {
+                name: 'Hardware Engineer'
+            },
+            {
+                name: 'Machine Learning Engineer'
+            },
+            {
+                name: 'Product Manager'
+            },
+            {
+                name: 'Software Development Engineer'
+            }
+        ]
     },
+
     reducers: {
         modifyExperience: (state, action) => {
             state.experience = action.payload;

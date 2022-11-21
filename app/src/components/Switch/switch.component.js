@@ -7,7 +7,7 @@ import { modifyH1B } from '../../reduxSlices/filterSlice';
 import Switch from '@mui/material/Switch';
 import './switch.scss';
 
-const Android12Switch = styled(Switch)(({ theme }) => ({
+const VisaSwitch = styled(Switch)(({ theme }) => ({
     padding: 8,
     '& .MuiSwitch-track': {
         borderRadius: 22 / 2,
@@ -55,10 +55,7 @@ export default function SwitchH1b({ check }) {
         <FormGroup className="h1b-switch">
             <FormControlLabel
                 control={
-                    <Android12Switch
-                        checked={filterInfo}
-                        onChange={handleChange}
-                    />
+                    <VisaSwitch checked={filterInfo} onChange={handleChange} />
                 }
             />
         </FormGroup>

@@ -6,7 +6,8 @@ export const filterSlice = createSlice({
         experience: 0,
         salary: [50, 300],
         education: [true, true, true],
-        h1b: true
+        h1b: true,
+        job_family: []
     },
     reducers: {
         modifyExperience: (state, action) => {
@@ -21,12 +22,16 @@ export const filterSlice = createSlice({
         modifyH1B: (state, action) => {
             state.h1b = action.payload;
         },
+        modifyJobFamily: (state, action) => {
+            state.job_family = action.payload;
+        },
         updateFilters: (state, action) => {
             let updated_state = action.payload;
             state.experience = updated_state.experience;
             state.salary = updated_state.salary;
             state.education = updated_state.education;
             state.h1b = updated_state.h1b;
+            state.job_family = updated_state.job_family;
         }
     }
 });
@@ -37,6 +42,7 @@ export const {
     modifySalary,
     modifyEducation,
     modifyH1B,
+    modifyJobFamily,
     updateFilters
 } = filterSlice.actions;
 

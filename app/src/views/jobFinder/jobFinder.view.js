@@ -40,6 +40,7 @@ import { updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
 import CheckboxEducation from '../../components/Checkbox/checkbox.component';
 import SwitchH1b from '../../components/Switch/switch.component';
+import JobDropdown from '../../components/JobDropdown/jobDropdown.component';
 
 const QUERY_USER_DATA = gql`
     query getUserByID($userId: ID!) {
@@ -428,6 +429,15 @@ export default function JobFinderView() {
                                                 min={50}
                                                 max={300}
                                             />
+                                        </Col>
+                                    </Row>
+                                    <Row className="row-margin">
+                                        <Col xs={6}>
+                                            <p>Job Family</p>
+                                            <JobDropdown />
+                                        </Col>
+                                        <Col xs={6}>
+                                            <p>Location</p>
                                         </Col>
                                     </Row>
                                 </Col>

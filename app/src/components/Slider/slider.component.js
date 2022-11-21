@@ -27,7 +27,7 @@ export default function SliderField({ defaultValue, step, min, max }) {
     const dispatch = useDispatch();
     let marks = createMarks(min, max, step);
 
-    const filterInfo = useSelector((state) => state?.filter);
+    const filterInfo = useSelector((state) => state?.filter?.experience);
 
     const [value, setValue] = useState(defaultValue);
 
@@ -39,7 +39,7 @@ export default function SliderField({ defaultValue, step, min, max }) {
     return (
         <React.Fragment>
             <Slider
-                value={filterInfo?.experience ? filterInfo?.experience : 0}
+                value={filterInfo ? filterInfo : 0}
                 valueLabelDisplay="auto"
                 step={step}
                 min={min}

@@ -26,6 +26,9 @@ import Button from '@mui/material/Button';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import SliderField from '../../components/Slider/slider.component';
 import RangeSliderField from '../../components/RangeSlider/rangeSlider.component';
 import Container from 'react-bootstrap/Container';
@@ -35,6 +38,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
 import { updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
+import CheckboxEducation from '../../components/Checkbox/checkbox.component';
 
 const QUERY_USER_DATA = gql`
     query getUserByID($userId: ID!) {
@@ -235,7 +239,8 @@ export default function JobFinderView() {
 
     const defaultFilters = {
         experience: 0,
-        salary: [50, 300]
+        salary: [50, 300],
+        education: [true, true, true]
     };
 
     useEffect(() => {
@@ -383,34 +388,42 @@ export default function JobFinderView() {
                                         </Typography>
                                     </Col>
                                 </Row>
-                                <Row>
-                                    <Col xs={4}>
-                                        <p>Work Experience</p>
-                                        <SliderField
-                                            defaultValue={
-                                                finalFilterInfo?.experience
-                                            }
-                                            step={1}
-                                            min={0}
-                                            max={10}
+                                <Col xs={8}>
+                                    <Row className="row-margin">
+                                        <p>Education</p>
+                                        <CheckboxEducation
+                                            checks={finalFilterInfo?.education}
                                         />
-                                    </Col>
-                                    <Col xs={4}>
-                                        <p>Salary</p>
-                                        <RangeSliderField
-                                            min_value={
-                                                finalFilterInfo?.salary[0]
-                                            }
-                                            max_value={
-                                                finalFilterInfo?.salary[1]
-                                            }
-                                            step={50}
-                                            min={50}
-                                            max={300}
-                                        />
-                                    </Col>
-                                    <Col xs={4}></Col>
-                                </Row>
+                                    </Row>
+                                    <Row className="row-margin">
+                                        <Col xs={6}>
+                                            <p>Work Experience</p>
+                                            <SliderField
+                                                defaultValue={
+                                                    finalFilterInfo?.experience
+                                                }
+                                                step={1}
+                                                min={0}
+                                                max={10}
+                                            />
+                                        </Col>
+                                        <Col xs={6}>
+                                            <p>Salary</p>
+                                            <RangeSliderField
+                                                min_value={
+                                                    finalFilterInfo?.salary[0]
+                                                }
+                                                max_value={
+                                                    finalFilterInfo?.salary[1]
+                                                }
+                                                step={50}
+                                                min={50}
+                                                max={300}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col xs={4}></Col>
                             </Container>
                         </Modal.Body>
                         <Modal.Footer>

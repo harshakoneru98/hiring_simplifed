@@ -33,7 +33,7 @@ export default function RangeSliderField({
     const dispatch = useDispatch();
     let marks = createMarks(min, max, step);
 
-    const filterInfo = useSelector((state) => state?.filter);
+    const filterInfo = useSelector((state) => state?.filter?.salary);
 
     const [value, setValue] = useState([min_value, max_value]);
 
@@ -47,7 +47,7 @@ export default function RangeSliderField({
             <Slider
                 valueLabelDisplay="auto"
                 marks={marks}
-                value={filterInfo?.salary ? filterInfo?.salary : [50, 300]}
+                value={filterInfo ? filterInfo : [50, 300]}
                 min={min}
                 max={max}
                 step={step}

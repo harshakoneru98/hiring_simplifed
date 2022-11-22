@@ -236,13 +236,48 @@ export default function JobFinderView() {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [filterData, setFilterData] = useState({});
 
     const filterInfo = useSelector((state) => state?.filter);
     const finalFilterInfo = useSelector((state) => state?.finalFilter);
 
     useEffect(() => {
-        console.log('Final Filters : ', finalFilterInfo);
+        let filter_query = {};
+        if (finalFilterInfo) {
+            filter_query['experience'] = finalFilterInfo.experience;
+            filter_query['salary_min'] = finalFilterInfo.salary[0] * 1000;
+            if (finalFilterInfo.salary[1] !== 300) {
+                filter_query['salary_max'] = finalFilterInfo.salary[1] * 1000;
+            } else {
+                filter_query['salary_max'] = -1;
+            }
+
+            filter_query['h1b'] = finalFilterInfo.h1b ? [1] : [0, 1];
+            filter_query['sort_experience'] = finalFilterInfo.sortValues[0]
+                ? 'DESC'
+                : 'ASC';
+            filter_query['sort_salary'] = finalFilterInfo.sortValues[1]
+                ? 'DESC'
+                : 'ASC';
+            const degrees = ['PhD Degree', 'Master Degree', 'Bachelor Degree'];
+            const indices = finalFilterInfo.education.flatMap((bool, index) =>
+                bool ? index : []
+            );
+            filter_query['education'] = indices.map((i) => degrees[i]);
+            filter_query['job_family'] = finalFilterInfo.job_family.map(
+                (a) => a.name
+            );
+            filter_query['states'] = finalFilterInfo.states.map((a) => a.name);
+            filter_query['companies'] =
+                finalFilterInfo.company_to_company_types.map((a) => a.name);
+
+            setFilterData(filter_query);
+        }
     }, [finalFilterInfo]);
+
+    useEffect(() => {
+        console.log('Filter Data : ', filterData);
+    }, [filterData]);
 
     const { data: jobCount } = useQuery(QUERY_TOTAL_JOBS);
 
@@ -262,8 +297,6 @@ export default function JobFinderView() {
             }
         }
     });
-
-    console.log('Job Data : ', jobData);
 
     const [tableData, setTableData] = useState([]);
     const [show, setShow] = useState(false);

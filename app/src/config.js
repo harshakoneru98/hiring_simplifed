@@ -28,138 +28,183 @@ export const defaultValues = {
     ],
     states: [
         {
+            name: 'AL',
             fullName: 'Alabama'
         },
         {
+            name: 'AK',
             fullName: 'Alaska'
         },
         {
+            name: 'AZ',
             fullName: 'Arizona'
         },
         {
+            name: 'AR',
             fullName: 'Arkansas'
         },
         {
+            name: 'CA',
             fullName: 'California'
         },
         {
+            name: 'CO',
             fullName: 'Colorado'
         },
         {
+            name: 'CT',
             fullName: 'Connecticut'
         },
         {
+            name: 'DE',
             fullName: 'Delaware'
         },
         {
+            name: 'DC',
             fullName: 'District of Columbia'
         },
         {
+            name: 'FL',
             fullName: 'Florida'
         },
         {
+            name: 'GA',
             fullName: 'Georgia'
         },
         {
+            name: 'HI',
             fullName: 'Hawaii'
         },
         {
+            name: 'ID',
             fullName: 'Idaho'
         },
         {
+            name: 'IL',
             fullName: 'Illinois'
         },
         {
+            name: 'IN',
             fullName: 'Indiana'
         },
         {
+            name: 'IA',
             fullName: 'Iowa'
         },
         {
+            name: 'KS',
             fullName: 'Kansas'
         },
         {
+            name: 'LA',
             fullName: 'Louisiana'
         },
         {
+            name: 'ME',
             fullName: 'Maine'
         },
         {
+            name: 'MD',
             fullName: 'Maryland'
         },
         {
+            name: 'MA',
             fullName: 'Massachusetts'
         },
         {
+            name: 'MI',
             fullName: 'Michigan'
         },
         {
+            name: 'MN',
             fullName: 'Minnesota'
         },
         {
+            name: 'MO',
             fullName: 'Missouri'
         },
         {
+            name: 'MT',
             fullName: 'Montana'
         },
         {
+            name: 'NE',
             fullName: 'Nebraska'
         },
         {
+            name: 'NV',
             fullName: 'Nevada'
         },
         {
+            name: 'NJ',
             fullName: 'New Jersey'
         },
         {
+            name: 'NM',
             fullName: 'New Mexico'
         },
         {
+            name: 'NY',
             fullName: 'New York'
         },
         {
+            name: 'NC',
             fullName: 'North Carolina'
         },
         {
+            name: 'OH',
             fullName: 'Ohio'
         },
         {
+            name: 'OR',
             fullName: 'Oregon'
         },
         {
+            name: 'PA',
             fullName: 'Pennsylvania'
         },
         {
+            name: 'Remote',
             fullName: 'Remote'
         },
         {
+            name: 'RI',
             fullName: 'Rhode Island'
         },
         {
+            name: 'SC',
             fullName: 'South Carolina'
         },
         {
+            name: 'TN',
             fullName: 'Tennessee'
         },
         {
+            name: 'TX',
             fullName: 'Texas'
         },
         {
+            name: 'UT',
             fullName: 'Utah'
         },
         {
+            name: 'VT',
             fullName: 'Vermont'
         },
         {
+            name: 'VA',
             fullName: 'Virginia'
         },
         {
+            name: 'WA',
             fullName: 'Washington'
         },
         {
+            name: 'WV',
             fullName: 'West Virginia'
         },
         {
+            name: 'WI',
             fullName: 'Wisconsin'
         }
     ],

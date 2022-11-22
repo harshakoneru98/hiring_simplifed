@@ -24,6 +24,9 @@ export const filterSlice = createSlice({
         modifyStates: (state, action) => {
             state.states = action.payload;
         },
+        modifyCompanies: (state, action) => {
+            state.company_to_company_types = action.payload;
+        },
         updateFilters: (state, action) => {
             let updated_state = action.payload;
             state.experience = updated_state.experience;
@@ -31,7 +34,8 @@ export const filterSlice = createSlice({
             state.education = updated_state.education;
             state.h1b = updated_state.h1b;
             state.job_family = updated_state.job_family;
-            state.states = updated_state.states;
+            state.company_to_company_types =
+                updated_state.company_to_company_types;
         }
     }
 });
@@ -44,6 +48,7 @@ export const {
     modifyH1B,
     modifyJobFamily,
     modifyStates,
+    modifyCompanies,
     updateFilters
 } = filterSlice.actions;
 

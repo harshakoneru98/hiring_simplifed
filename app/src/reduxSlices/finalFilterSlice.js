@@ -13,6 +13,8 @@ export const finalFilterSlice = createSlice({
             state.h1b = updated_state.h1b;
             state.job_family = updated_state.job_family;
             state.states = updated_state.states;
+            state.company_to_company_types =
+                updated_state.company_to_company_types;
         }
     }
 });

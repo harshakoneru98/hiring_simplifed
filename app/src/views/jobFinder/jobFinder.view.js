@@ -40,6 +40,7 @@ import CheckboxEducation from '../../components/Checkbox/checkbox.component';
 import SwitchH1b from '../../components/Switch/switch.component';
 import JobDropdown from '../../components/JobDropdown/jobDropdown.component';
 import LocationDropdown from '../../components/LocationDropdown/locationDropdown.component';
+import CompanyDropdown from '../../components/CompanyDropdown/companyDropdown.component';
 
 const QUERY_USER_DATA = gql`
     query getUserByID($userId: ID!) {
@@ -401,11 +402,13 @@ export default function JobFinderView() {
                                         </Col>
                                     </Row>
                                     <Row className="row-margin">
-                                        <Col xs={6}>
-                                            <p>Company Type</p>
-                                        </Col>
-                                        <Col xs={6}>
+                                        <Col xs={12}>
                                             <p>Companies</p>
+                                            <CompanyDropdown
+                                                check={
+                                                    finalFilterInfo?.company_to_company_types
+                                                }
+                                            />
                                         </Col>
                                     </Row>
                                     <Row className="row-margin">

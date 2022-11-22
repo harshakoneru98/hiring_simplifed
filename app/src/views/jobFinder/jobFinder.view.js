@@ -26,9 +26,6 @@ import Button from '@mui/material/Button';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import SliderField from '../../components/Slider/slider.component';
 import RangeSliderField from '../../components/RangeSlider/rangeSlider.component';
 import Container from 'react-bootstrap/Container';
@@ -38,9 +35,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
 import { updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
+import { defaultValues } from '../../config';
 import CheckboxEducation from '../../components/Checkbox/checkbox.component';
 import SwitchH1b from '../../components/Switch/switch.component';
 import JobDropdown from '../../components/JobDropdown/jobDropdown.component';
+import LocationDropdown from '../../components/LocationDropdown/locationDropdown.component';
 
 const QUERY_USER_DATA = gql`
     query getUserByID($userId: ID!) {
@@ -239,36 +238,6 @@ export default function JobFinderView() {
     const filterInfo = useSelector((state) => state?.filter);
     const finalFilterInfo = useSelector((state) => state?.finalFilter);
 
-    const defaultFilters = {
-        experience: 0,
-        salary: [50, 300],
-        education: [true, true, true],
-        h1b: true,
-        job_family: [
-            {
-                name: 'Business Analyst'
-            },
-            {
-                name: 'Data Engineer'
-            },
-            {
-                name: 'Data Scientist'
-            },
-            {
-                name: 'Hardware Engineer'
-            },
-            {
-                name: 'Machine Learning Engineer'
-            },
-            {
-                name: 'Product Manager'
-            },
-            {
-                name: 'Software Development Engineer'
-            }
-        ]
-    };
-
     useEffect(() => {
         console.log('Filters : ', filterInfo);
     }, [filterInfo]);
@@ -365,8 +334,8 @@ export default function JobFinderView() {
     };
 
     const handleClearFilters = () => {
-        dispatch(updateFilters(defaultFilters));
-        dispatch(updateFinalFilters(defaultFilters));
+        dispatch(updateFilters(defaultValues));
+        dispatch(updateFinalFilters(defaultValues));
     };
 
     const handleSubmitFilters = () => {
@@ -416,6 +385,30 @@ export default function JobFinderView() {
                                 </Row>
                                 <Col xs={8}>
                                     <Row className="row-margin">
+                                        <Col xs={6}>
+                                            <p>Job Family</p>
+                                            <JobDropdown
+                                                check={
+                                                    finalFilterInfo?.job_family
+                                                }
+                                            />
+                                        </Col>
+                                        <Col xs={6}>
+                                            <p>Location</p>
+                                            <LocationDropdown
+                                                check={finalFilterInfo?.states}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row className="row-margin">
+                                        <Col xs={6}>
+                                            <p>Company Type</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <p>Companies</p>
+                                        </Col>
+                                    </Row>
+                                    <Row className="row-margin">
                                         <CheckboxEducation
                                             checks={finalFilterInfo?.education}
                                         />
@@ -452,27 +445,6 @@ export default function JobFinderView() {
                                                 min={50}
                                                 max={300}
                                             />
-                                        </Col>
-                                    </Row>
-                                    <Row className="row-margin">
-                                        <Col xs={6}>
-                                            <p>Job Family</p>
-                                            <JobDropdown
-                                                check={
-                                                    finalFilterInfo?.job_family
-                                                }
-                                            />
-                                        </Col>
-                                        <Col xs={6}>
-                                            <p>Location</p>
-                                        </Col>
-                                    </Row>
-                                    <Row className="row-margin">
-                                        <Col xs={6}>
-                                            <p>Company Type</p>
-                                        </Col>
-                                        <Col xs={6}>
-                                            <p>Companies</p>
                                         </Col>
                                     </Row>
                                 </Col>

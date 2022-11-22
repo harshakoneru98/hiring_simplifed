@@ -69,6 +69,7 @@ export const typeDefs = gql`
 
     type State @exclude(operations: [CREATE, UPDATE, DELETE]) {
         name: String!
+        fullName: String!
         jobs: [Job!]! @relationship(type: "State_has_job", direction: OUT)
     }
 

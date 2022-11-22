@@ -3,31 +3,31 @@ import { gql, useQuery } from '@apollo/client';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
-import { modifyJobFamily } from '../../reduxSlices/filterSlice';
+import { modifyStates } from '../../reduxSlices/filterSlice';
 import { defaultValues } from '../../config';
-import './jobDropdown.scss';
+import './locationDropdown.scss';
 
-const defaultFamily = defaultValues.job_family;
+const defaultFamily = defaultValues.states;
 
-const QUERY_JOB_FAMILIY = gql`
-    query JobFamily {
-        jobFamilies(options: { sort: [{ name: ASC }] }) {
-            name
+const QUERY_STATES = gql`
+    query States {
+        states(options: { sort: [{ fullName: ASC }] }) {
+            fullName
         }
     }
 `;
 
-export default function JobDropdown({ check }) {
-    const { data: jobFamilyData } = useQuery(QUERY_JOB_FAMILIY);
+export default function LocationDropdown({ check }) {
+    const { data: statesData } = useQuery(QUERY_STATES);
 
     const dispatch = useDispatch();
     const [checked, setChecked] = useState(check);
 
-    const filterInfo = useSelector((state) => state?.filter?.job_family);
+    const filterInfo = useSelector((state) => state?.filter?.states);
 
     const handleChange = (event, newValue) => {
         setChecked(newValue);
-        dispatch(modifyJobFamily(newValue));
+        dispatch(modifyStates(newValue));
     };
 
     return (
@@ -39,14 +39,14 @@ export default function JobDropdown({ check }) {
                 limitTags={1}
                 onChange={handleChange}
                 options={
-                    jobFamilyData?.jobFamilies
+                    statesData?.states
                         ? defaultFamily.filter(
-                              (x) => !jobFamilyData?.jobFamilies.includes(x)
+                              (x) => !statesData?.states.includes(x)
                           )
                         : defaultFamily
                 }
                 value={filterInfo}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option.fullName}
                 renderInput={(params) => <TextField {...params} />}
                 className="dropdown-autocomplete"
             />

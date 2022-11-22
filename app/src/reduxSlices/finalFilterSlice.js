@@ -1,36 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { defaultValues } from '../config';
 
 export const finalFilterSlice = createSlice({
     name: 'finalFilter',
-    initialState: {
-        experience: 0,
-        salary: [50, 300],
-        education: [true, true, true],
-        h1b: true,
-        job_family: [
-            {
-                name: 'Business Analyst'
-            },
-            {
-                name: 'Data Engineer'
-            },
-            {
-                name: 'Data Scientist'
-            },
-            {
-                name: 'Hardware Engineer'
-            },
-            {
-                name: 'Machine Learning Engineer'
-            },
-            {
-                name: 'Product Manager'
-            },
-            {
-                name: 'Software Development Engineer'
-            }
-        ]
-    },
+    initialState: defaultValues,
     reducers: {
         updateFinalFilters: (state, action) => {
             let updated_state = action.payload;
@@ -39,6 +12,7 @@ export const finalFilterSlice = createSlice({
             state.education = updated_state.education;
             state.h1b = updated_state.h1b;
             state.job_family = updated_state.job_family;
+            state.states = updated_state.states;
         }
     }
 });

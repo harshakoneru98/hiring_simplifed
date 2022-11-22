@@ -103,6 +103,7 @@ export const typeDefs = gql`
         Work_Max: Int!
         Title: String!
         job_url: String!
+        Valid: Int!
         job_family: Job_Family!
             @relationship(type: "has_job_family", direction: OUT)
         city: City! @relationship(type: "Located_in_City", direction: OUT)

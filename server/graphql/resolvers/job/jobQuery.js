@@ -38,6 +38,7 @@ const getJobData = async (parent, args) => {
         AND state.name IN ${states}
         AND company.name IN ${companies}
         AND education.name IN ${education}
+        AND job.Valid = 1 
         AND job.H1B_flag IN ${h1b}
         AND job.Work_Min >= ${experience}
         AND job.Salary >= ${salary_min} ` +

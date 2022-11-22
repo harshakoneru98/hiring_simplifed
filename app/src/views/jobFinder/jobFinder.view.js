@@ -25,6 +25,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from '@mui/material/Button';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import SendIcon from '@mui/icons-material/Send';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import Stack from '@mui/material/Stack';
 import SliderField from '../../components/Slider/slider.component';
 import RangeSliderField from '../../components/RangeSlider/rangeSlider.component';
@@ -140,8 +142,14 @@ function JobRow(props) {
                                         Education Qualifications
                                     </TableCell>
                                     <TableCell>H1B Sponsorship</TableCell>
-                                    <TableCell>Matching Skills</TableCell>
-                                    <TableCell>Missing Skills</TableCell>
+                                    <TableCell>
+                                        Matching Skills{' '}
+                                        <CheckIcon color="success" />
+                                    </TableCell>
+                                    <TableCell>
+                                        Missing Skills{' '}
+                                        <ClearIcon color="error" />
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -314,11 +322,6 @@ export default function JobFinderView() {
         }
     }, [finalFilterInfo]);
 
-    useEffect(() => {
-        console.log('Filter Data : ', filterData);
-        console.log('Final : ', filterCountData);
-    }, [filterData]);
-
     const { data: jobCount, refetchFilterData } = useQuery(QUERY_TOTAL_JOBS, {
         variables: {
             where: {
@@ -337,14 +340,11 @@ export default function JobFinderView() {
                 },
                 state: {
                     name_IN: filterCountData.states
-                }
+                },
+                Valid: 1
             }
         }
     });
-
-    useEffect(() => {
-        console.log('Job Count : ', jobCount?.jobsAggregate?.count);
-    }, [jobCount]);
 
     const { data: userData } = useQuery(QUERY_USER_DATA, {
         variables: { userId }
@@ -497,7 +497,8 @@ export default function JobFinderView() {
                 },
                 state: {
                     name_IN: filterCountData.states
-                }
+                },
+                Valid: 1
             }
         });
     };

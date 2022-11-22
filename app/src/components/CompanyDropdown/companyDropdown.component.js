@@ -43,11 +43,19 @@ export default function CompanyDropdown() {
                 size="small"
                 limitTags={5}
                 onChange={handleChange}
+                groupBy={(option) => option.company_type.name}
                 options={
                     companiesData?.companies
-                        ? defaultCompanies.filter(
-                              (x) => !companiesData?.companies.includes(x)
-                          )
+                        ? defaultCompanies
+                              .filter(
+                                  (x) => !companiesData?.companies.includes(x)
+                              )
+                              .sort(
+                                  (a, b) =>
+                                      -b.company_type.name.localeCompare(
+                                          a.company_type.name
+                                      )
+                              )
                         : defaultCompanies
                 }
                 value={filterInfo}

@@ -3,7 +3,20 @@ import neo4j from 'neo4j-driver';
 import config from '../../../config.js';
 
 const getJobData = async (parent, args) => {
-    const { limit, offset } = args.input;
+    const {
+        limit,
+        offset,
+        companies,
+        education,
+        experience,
+        h1b,
+        job_family,
+        salary_max,
+        salary_min,
+        sort_experience,
+        sort_salary,
+        states
+    } = args.input;
 
     const driver = neo4j.driver(
         config.NEO4J_URI,
@@ -13,14 +26,24 @@ const getJobData = async (parent, args) => {
     try {
         const session = driver.session({ database: 'neo4j' });
 
-        const readQuery = `MATCH (job:Job) - [:Located_in_City] -> (city:City)
+        const readQuery =
+            `MATCH (job:Job) - [:Located_in_City] -> (city:City)
         MATCH (job) - [:Located_in_State] -> (state:State)
         MATCH (job) - [:Work_4_Company] -> (company:Company)
         MATCH (company) - [:type_of] -> (company_type:Comp_Type)
         MATCH (job) - [:has_job_family] -> (job_family:Job_Family)
         MATCH (job) - [:Requires_degree] -> (education:Education_Level)
         MATCH (job) - [:Requires_Skill] -> (skills:Skill)
-        RETURN job.name as name, job.Title as title, job.H1B_flag as h1b, job.Salary as salary, job.Work_Min as min_work_exp, job.Work_Max as max_work_exp, job.job_url as job_url, job.JD as jd, city.name as city, state.name as state, company.name as company, company_type.name as company_type, job_family.name as job_family, COLLECT(DISTINCT(education.name)) as education, COLLECT(DISTINCT(skills.name)) as skills
+        WHERE job_family.name IN ${job_family}
+        AND state.name IN ${states}
+        AND company.name IN ${companies}
+        AND education.name IN ${education}
+        AND job.H1B_flag IN ${h1b}
+        AND job.Work_Min >= ${experience}
+        AND job.Salary >= ${salary_min} ` +
+            (salary_max !== -1 ? `AND job.Salary <= ${salary_max}` : ``) +
+            ` RETURN job.name as name, job.Title as title, job.H1B_flag as h1b, job.Salary as salary, job.Work_Min as min_work_exp, job.Work_Max as max_work_exp, job.job_url as job_url, job.JD as jd, city.name as city, state.name as state, company.name as company, company_type.name as company_type, job_family.name as job_family, COLLECT(DISTINCT(education.name)) as education, COLLECT(DISTINCT(skills.name)) as skills
+            ORDER BY job.Work_Min ${sort_experience} , job.Salary ${sort_salary}
         SKIP ${offset}
         LIMIT ${limit}`;
 

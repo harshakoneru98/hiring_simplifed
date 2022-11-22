@@ -2,7 +2,7 @@ export const defaultValues = {
     experience: 0,
     salary: [50, 300],
     education: [true, true, true],
-    h1b: true,
+    h1b: false,
     job_family: [
         {
             name: 'Business Analyst'

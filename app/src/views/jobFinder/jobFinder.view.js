@@ -52,8 +52,8 @@ const QUERY_USER_DATA = gql`
 `;
 
 const QUERY_TOTAL_JOBS = gql`
-    query JobsAggregate {
-        jobsAggregate {
+    query JobsAggregate($where: JobWhere) {
+        jobsAggregate(where: $where) {
             count
         }
     }
@@ -237,49 +237,114 @@ export default function JobFinderView() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filterData, setFilterData] = useState({});
+    const [filterCountData, setFilterCountData] = useState({});
 
     const filterInfo = useSelector((state) => state?.filter);
     const finalFilterInfo = useSelector((state) => state?.finalFilter);
 
     useEffect(() => {
         let filter_query = {};
+        let filter_count_query = {};
         if (finalFilterInfo) {
             filter_query['experience'] = finalFilterInfo.experience;
+            filter_count_query['experience'] = finalFilterInfo.experience;
+
             filter_query['salary_min'] = finalFilterInfo.salary[0] * 1000;
+            filter_count_query['salary_min'] = finalFilterInfo.salary[0] * 1000;
+
             if (finalFilterInfo.salary[1] !== 300) {
                 filter_query['salary_max'] = finalFilterInfo.salary[1] * 1000;
+                filter_count_query['salary_max'] =
+                    finalFilterInfo.salary[1] * 1000;
             } else {
                 filter_query['salary_max'] = -1;
+                filter_count_query['salary_max'] = 1000 * 1000;
             }
 
-            filter_query['h1b'] = finalFilterInfo.h1b ? [1] : [0, 1];
-            filter_query['sort_experience'] = finalFilterInfo.sortValues[0]
+            filter_query['h1b'] = finalFilterInfo.h1b ? '[1]' : '[0, 1]';
+            filter_count_query['h1b'] = finalFilterInfo.h1b ? [1] : [0, 1];
+
+            filter_query['sort_experience'] = finalFilterInfo.sortValues[
+                'experience'
+            ]
                 ? 'DESC'
                 : 'ASC';
-            filter_query['sort_salary'] = finalFilterInfo.sortValues[1]
+            filter_query['sort_salary'] = finalFilterInfo.sortValues['salary']
                 ? 'DESC'
                 : 'ASC';
             const degrees = ['PhD Degree', 'Master Degree', 'Bachelor Degree'];
             const indices = finalFilterInfo.education.flatMap((bool, index) =>
                 bool ? index : []
             );
-            filter_query['education'] = indices.map((i) => degrees[i]);
-            filter_query['job_family'] = finalFilterInfo.job_family.map(
+            filter_query['education'] =
+                "['" + indices.map((i) => degrees[i]).join("','") + "']";
+
+            filter_count_query['education'] = indices.map((i) => degrees[i]);
+
+            filter_query['job_family'] =
+                "['" +
+                finalFilterInfo.job_family.map((a) => a.name).join("','") +
+                "']";
+
+            filter_count_query['job_family'] = finalFilterInfo.job_family.map(
                 (a) => a.name
             );
-            filter_query['states'] = finalFilterInfo.states.map((a) => a.name);
+
+            filter_query['states'] =
+                "['" +
+                finalFilterInfo.states.map((a) => a.name).join("','") +
+                "']";
+
+            filter_count_query['states'] = finalFilterInfo.states.map(
+                (a) => a.name
+            );
+
             filter_query['companies'] =
+                '["' +
+                finalFilterInfo.company_to_company_types
+                    .map((a) => a.name)
+                    .join('","') +
+                '"]';
+
+            filter_count_query['companies'] =
                 finalFilterInfo.company_to_company_types.map((a) => a.name);
 
             setFilterData(filter_query);
+            setFilterCountData(filter_count_query);
         }
     }, [finalFilterInfo]);
 
     useEffect(() => {
         console.log('Filter Data : ', filterData);
+        console.log('Final : ', filterCountData);
     }, [filterData]);
 
-    const { data: jobCount } = useQuery(QUERY_TOTAL_JOBS);
+    const { data: jobCount, refetchFilterData } = useQuery(QUERY_TOTAL_JOBS, {
+        variables: {
+            where: {
+                Salary_GTE: filterCountData.salary_min,
+                Salary_LTE: filterCountData.salary_max,
+                H1B_flag_IN: filterCountData.h1b,
+                Work_Min_GTE: filterCountData.experience,
+                company: {
+                    name_IN: filterCountData.companies
+                },
+                education: {
+                    name_IN: filterCountData.education
+                },
+                job_family: {
+                    name_IN: filterCountData.job_family
+                },
+                state: {
+                    name_IN: filterCountData.states
+                }
+            }
+        }
+    });
+
+    useEffect(() => {
+        console.log('Job Count : ', jobCount?.jobsAggregate?.count);
+    }, [jobCount]);
 
     const { data: userData } = useQuery(QUERY_USER_DATA, {
         variables: { userId }
@@ -293,7 +358,17 @@ export default function JobFinderView() {
         variables: {
             input: {
                 limit: rowsPerPage,
-                offset: page * rowsPerPage
+                offset: page * rowsPerPage,
+                companies: filterData?.companies,
+                education: filterData?.education,
+                experience: filterData?.experience,
+                h1b: filterData?.h1b,
+                job_family: filterData?.job_family,
+                salary_max: filterData?.salary_max,
+                salary_min: filterData?.salary_min,
+                sort_experience: filterData?.sort_experience,
+                sort_salary: filterData?.sort_salary,
+                states: filterData?.states
             }
         }
     });
@@ -326,7 +401,17 @@ export default function JobFinderView() {
         refetch({
             input: {
                 limit: rowsPerPage,
-                offset: page * rowsPerPage
+                offset: page * rowsPerPage,
+                companies: filterData?.companies,
+                education: filterData?.education,
+                experience: filterData?.experience,
+                h1b: filterData?.h1b,
+                job_family: filterData?.job_family,
+                salary_max: filterData?.salary_max,
+                salary_min: filterData?.salary_min,
+                sort_experience: filterData?.sort_experience,
+                sort_salary: filterData?.sort_salary,
+                states: filterData?.states
             }
         });
     }, [page, rowsPerPage]);
@@ -376,7 +461,45 @@ export default function JobFinderView() {
 
     const handleSubmitFilters = () => {
         dispatch(updateFinalFilters(filterInfo));
+        setPage(0);
         setShow(false);
+        refetch({
+            input: {
+                limit: rowsPerPage,
+                offset: 0,
+                companies: filterData?.companies,
+                education: filterData?.education,
+                experience: filterData?.experience,
+                h1b: filterData?.h1b,
+                job_family: filterData?.job_family,
+                salary_max: filterData?.salary_max,
+                salary_min: filterData?.salary_min,
+                sort_experience: filterData?.sort_experience,
+                sort_salary: filterData?.sort_salary,
+                states: filterData?.states
+            }
+        });
+
+        refetchFilterData({
+            where: {
+                Salary_GTE: filterCountData.salary_min,
+                Salary_LTE: filterCountData.salary_max,
+                H1B_flag_IN: filterCountData.h1b,
+                Work_Min_GTE: filterCountData.experience,
+                company: {
+                    name_IN: filterCountData.companies
+                },
+                education: {
+                    name_IN: filterCountData.education
+                },
+                job_family: {
+                    name_IN: filterCountData.job_family
+                },
+                state: {
+                    name_IN: filterCountData.states
+                }
+            }
+        });
     };
 
     const [sortValues, setSortValues] = useState(finalFilterInfo?.sortValues);

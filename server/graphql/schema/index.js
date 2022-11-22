@@ -135,6 +135,16 @@ export const typeDefs = gql`
     input jobDataInput {
         limit: Int!
         offset: Int!
+        companies: String!
+        education: String!
+        experience: Int!
+        h1b: String!
+        job_family: String!
+        salary_max: Int!
+        salary_min: Int!
+        sort_experience: String!
+        sort_salary: String!
+        states: String!
     }
 
     type Query {

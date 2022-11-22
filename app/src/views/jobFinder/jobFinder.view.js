@@ -31,6 +31,7 @@ import RangeSliderField from '../../components/RangeSlider/rangeSlider.component
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Switch from '@mui/material/Switch';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
 import { updateFilters } from '../../reduxSlices/filterSlice';
@@ -344,6 +345,28 @@ export default function JobFinderView() {
         setShow(false);
     };
 
+    const [sortValues, setSortValues] = useState({
+        title: false,
+        company_name: false,
+        location: false,
+        job_family: false,
+        salary: false,
+        experience: false
+    });
+
+    const handleSortChange = (event) => {
+        const name = event.target.name;
+        const value = !sortValues[name];
+        setSortValues((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    useEffect(() => {
+        console.log('Sort : ', sortValues);
+    }, [sortValues]);
+
     return (
         <div className="container job-search-container">
             <div className="row">
@@ -367,7 +390,7 @@ export default function JobFinderView() {
                         <Modal.Body>
                             <Container>
                                 <Row>
-                                    <Col xs={8}>
+                                    <Col xs={8} className="first_column">
                                         <Typography
                                             variant="h6"
                                             className="filter_header"
@@ -375,7 +398,7 @@ export default function JobFinderView() {
                                             Filter Jobs
                                         </Typography>
                                     </Col>
-                                    <Col xs={4}>
+                                    <Col xs={4} className="second_column">
                                         <Typography
                                             variant="h6"
                                             className="filter_header"
@@ -384,74 +407,159 @@ export default function JobFinderView() {
                                         </Typography>
                                     </Col>
                                 </Row>
-                                <Col xs={8}>
-                                    <Row className="row-margin">
-                                        <Col xs={6}>
-                                            <p>Job Family</p>
-                                            <JobDropdown
-                                                check={
-                                                    finalFilterInfo?.job_family
+                                <Row>
+                                    <Col xs={8} className="first_column">
+                                        <Row className="row-margin">
+                                            <Col xs={6}>
+                                                <p>Job Family</p>
+                                                <JobDropdown
+                                                    check={
+                                                        finalFilterInfo?.job_family
+                                                    }
+                                                />
+                                            </Col>
+                                            <Col xs={6}>
+                                                <p>Location</p>
+                                                <LocationDropdown
+                                                    check={
+                                                        finalFilterInfo?.states
+                                                    }
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="row-margin">
+                                            <Col xs={12}>
+                                                <p>Companies</p>
+                                                <CompanyDropdown
+                                                    check={
+                                                        finalFilterInfo?.company_to_company_types
+                                                    }
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="row-margin">
+                                            <CheckboxEducation
+                                                checks={
+                                                    finalFilterInfo?.education
                                                 }
                                             />
-                                        </Col>
-                                        <Col xs={6}>
-                                            <p>Location</p>
-                                            <LocationDropdown
-                                                check={finalFilterInfo?.states}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row className="row-margin">
-                                        <Col xs={12}>
-                                            <p>Companies</p>
-                                            <CompanyDropdown
-                                                check={
-                                                    finalFilterInfo?.company_to_company_types
-                                                }
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row className="row-margin">
-                                        <CheckboxEducation
-                                            checks={finalFilterInfo?.education}
-                                        />
-                                        <Col xs={3}></Col>
-                                        <Col xs={3}>
-                                            <p>H-1B required?</p>
-                                            <SwitchH1b
-                                                check={finalFilterInfo?.h1b}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row className="row-margin">
-                                        <Col xs={6}>
-                                            <p>Work Experience</p>
-                                            <SliderField
-                                                defaultValue={
-                                                    finalFilterInfo?.experience
-                                                }
-                                                step={1}
-                                                min={0}
-                                                max={10}
-                                            />
-                                        </Col>
-                                        <Col xs={6}>
-                                            <p>Salary</p>
-                                            <RangeSliderField
-                                                min_value={
-                                                    finalFilterInfo?.salary[0]
-                                                }
-                                                max_value={
-                                                    finalFilterInfo?.salary[1]
-                                                }
-                                                step={50}
-                                                min={50}
-                                                max={300}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Col xs={4}></Col>
+                                            <Col xs={3}></Col>
+                                            <Col xs={3}>
+                                                <p>H-1B required?</p>
+                                                <SwitchH1b
+                                                    check={finalFilterInfo?.h1b}
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="row-margin">
+                                            <Col xs={6}>
+                                                <p>Work Experience</p>
+                                                <SliderField
+                                                    defaultValue={
+                                                        finalFilterInfo?.experience
+                                                    }
+                                                    step={1}
+                                                    min={0}
+                                                    max={10}
+                                                />
+                                            </Col>
+                                            <Col xs={6}>
+                                                <p>Salary</p>
+                                                <RangeSliderField
+                                                    min_value={
+                                                        finalFilterInfo
+                                                            ?.salary[0]
+                                                    }
+                                                    max_value={
+                                                        finalFilterInfo
+                                                            ?.salary[1]
+                                                    }
+                                                    step={50}
+                                                    min={50}
+                                                    max={300}
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <Col xs={4} className="second_column">
+                                        ASC <Switch disabled defaultChecked />{' '}
+                                        DESC
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Title</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues['title']
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="title"
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Company Name</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues[
+                                                            'company_name'
+                                                        ]
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="company_name"
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Location</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues['location']
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="location"
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Job Family</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues['job_family']
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="job_family"
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Salary</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues['salary']
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="salary"
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row className="sort-rows">
+                                            <Col xs={6}>Experience</Col>
+                                            <Col xs={6}>
+                                                <Switch
+                                                    checked={
+                                                        sortValues['experience']
+                                                    }
+                                                    onChange={handleSortChange}
+                                                    name="experience"
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
                             </Container>
                         </Modal.Body>
                         <Modal.Footer>

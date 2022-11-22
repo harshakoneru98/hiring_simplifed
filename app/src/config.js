@@ -782,5 +782,9 @@ export const defaultValues = {
                 name: 'BFSI'
             }
         }
-    ]
+    ],
+    sortValues: {
+        experience: false,
+        salary: false
+    }
 };

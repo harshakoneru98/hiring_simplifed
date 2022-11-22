@@ -27,6 +27,9 @@ export const filterSlice = createSlice({
         modifyCompanies: (state, action) => {
             state.company_to_company_types = action.payload;
         },
+        modifySort: (state, action) => {
+            state.sortValues = action.payload;
+        },
         updateFilters: (state, action) => {
             let updated_state = action.payload;
             state.experience = updated_state.experience;
@@ -36,6 +39,7 @@ export const filterSlice = createSlice({
             state.job_family = updated_state.job_family;
             state.company_to_company_types =
                 updated_state.company_to_company_types;
+            state.sortValues = updated_state.sortValues;
         }
     }
 });
@@ -49,6 +53,7 @@ export const {
     modifyJobFamily,
     modifyStates,
     modifyCompanies,
+    modifySort,
     updateFilters
 } = filterSlice.actions;
 

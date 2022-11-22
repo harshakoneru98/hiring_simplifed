@@ -15,6 +15,7 @@ export const finalFilterSlice = createSlice({
             state.states = updated_state.states;
             state.company_to_company_types =
                 updated_state.company_to_company_types;
+            state.sortValues = updated_state.sortValues;
         }
     }
 });

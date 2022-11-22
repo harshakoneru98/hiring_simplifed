@@ -34,7 +34,7 @@ import Col from 'react-bootstrap/Col';
 import Switch from '@mui/material/Switch';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateFinalFilters } from '../../reduxSlices/finalFilterSlice';
-import { updateFilters } from '../../reduxSlices/filterSlice';
+import { modifySort, updateFilters } from '../../reduxSlices/filterSlice';
 import './jobFinder.scss';
 import { defaultValues } from '../../config';
 import CheckboxEducation from '../../components/Checkbox/checkbox.component';
@@ -241,10 +241,6 @@ export default function JobFinderView() {
     const finalFilterInfo = useSelector((state) => state?.finalFilter);
 
     useEffect(() => {
-        console.log('Filters : ', filterInfo);
-    }, [filterInfo]);
-
-    useEffect(() => {
         console.log('Final Filters : ', finalFilterInfo);
     }, [finalFilterInfo]);
 
@@ -267,12 +263,16 @@ export default function JobFinderView() {
         }
     });
 
+    console.log('Job Data : ', jobData);
+
     const [tableData, setTableData] = useState([]);
     const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (!show) {
             dispatch(updateFilters(finalFilterInfo));
+        } else {
+            setSortValues(finalFilterInfo?.sortValues);
         }
     }, [show]);
 
@@ -338,6 +338,7 @@ export default function JobFinderView() {
     const handleClearFilters = () => {
         dispatch(updateFilters(defaultValues));
         dispatch(updateFinalFilters(defaultValues));
+        setSortValues(defaultValues.sortValues);
     };
 
     const handleSubmitFilters = () => {
@@ -345,27 +346,16 @@ export default function JobFinderView() {
         setShow(false);
     };
 
-    const [sortValues, setSortValues] = useState({
-        title: false,
-        company_name: false,
-        location: false,
-        job_family: false,
-        salary: false,
-        experience: false
-    });
+    const [sortValues, setSortValues] = useState(finalFilterInfo?.sortValues);
 
     const handleSortChange = (event) => {
         const name = event.target.name;
         const value = !sortValues[name];
-        setSortValues((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+        let newValues = { ...sortValues };
+        newValues[name] = value;
+        setSortValues(newValues);
+        dispatch(modifySort(newValues));
     };
-
-    useEffect(() => {
-        console.log('Sort : ', sortValues);
-    }, [sortValues]);
 
     return (
         <div className="container job-search-container">
@@ -485,52 +475,14 @@ export default function JobFinderView() {
                                         ASC <Switch disabled defaultChecked />{' '}
                                         DESC
                                         <Row className="sort-rows">
-                                            <Col xs={6}>Title</Col>
+                                            <Col xs={6}>Experience</Col>
                                             <Col xs={6}>
                                                 <Switch
                                                     checked={
-                                                        sortValues['title']
+                                                        sortValues['experience']
                                                     }
                                                     onChange={handleSortChange}
-                                                    name="title"
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <Row className="sort-rows">
-                                            <Col xs={6}>Company Name</Col>
-                                            <Col xs={6}>
-                                                <Switch
-                                                    checked={
-                                                        sortValues[
-                                                            'company_name'
-                                                        ]
-                                                    }
-                                                    onChange={handleSortChange}
-                                                    name="company_name"
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <Row className="sort-rows">
-                                            <Col xs={6}>Location</Col>
-                                            <Col xs={6}>
-                                                <Switch
-                                                    checked={
-                                                        sortValues['location']
-                                                    }
-                                                    onChange={handleSortChange}
-                                                    name="location"
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <Row className="sort-rows">
-                                            <Col xs={6}>Job Family</Col>
-                                            <Col xs={6}>
-                                                <Switch
-                                                    checked={
-                                                        sortValues['job_family']
-                                                    }
-                                                    onChange={handleSortChange}
-                                                    name="job_family"
+                                                    name="experience"
                                                 />
                                             </Col>
                                         </Row>
@@ -543,18 +495,6 @@ export default function JobFinderView() {
                                                     }
                                                     onChange={handleSortChange}
                                                     name="salary"
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <Row className="sort-rows">
-                                            <Col xs={6}>Experience</Col>
-                                            <Col xs={6}>
-                                                <Switch
-                                                    checked={
-                                                        sortValues['experience']
-                                                    }
-                                                    onChange={handleSortChange}
-                                                    name="experience"
                                                 />
                                             </Col>
                                         </Row>

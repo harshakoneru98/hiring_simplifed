@@ -60,7 +60,9 @@ export default function CompanyDropdown() {
                 }
                 value={filterInfo}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                    <TextField {...params} placeholder="Companies" />
+                )}
                 className="dropdown-companies"
             />
         </Fragment>

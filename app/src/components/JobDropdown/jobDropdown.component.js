@@ -47,7 +47,9 @@ export default function JobDropdown({ check }) {
                 }
                 value={filterInfo}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                    <TextField {...params} placeholder="Job Families" />
+                )}
                 className="dropdown-autocomplete"
             />
         </Fragment>

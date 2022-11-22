@@ -47,7 +47,9 @@ export default function LocationDropdown({ check }) {
                 }
                 value={filterInfo}
                 getOptionLabel={(option) => option.fullName}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                    <TextField {...params} placeholder="Locations" />
+                )}
                 className="dropdown-autocomplete"
             />
         </Fragment>

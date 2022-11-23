@@ -66,10 +66,20 @@ const extractRecommendations = async (final_skills) => {
             }
         );
     });
-    result = result.map((i) => parseInt(i));
+    let cluster = [parseInt(result[0])];
+
+    let job_recommendations = result
+        .slice(1)
+        .map((i) => parseInt(i.split('_')[0]));
+
+    let job_similarities = result
+        .slice(1)
+        .map((i) => parseFloat(i.split('_')[1]));
+
     return {
-        cluster: [result[0]],
-        job_recommendations: result.slice(1)
+        cluster: cluster,
+        job_recommendations: job_recommendations,
+        job_similarities: job_similarities
     };
 };
 
@@ -101,30 +111,31 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
 
         let skills = await extractSkills(userId, file_path);
         let final_skills = [...existing_skills, ...skills].sort();
-        let user_skills = [...new Set(final_skills)];
+        final_skills = [...new Set(final_skills)];
 
-        const { cluster, job_recommendations } = await extractRecommendations(
-            final_skills
-        );
+        const { cluster, job_recommendations, job_similarities } =
+            await extractRecommendations(final_skills);
 
         var params = {
             TableName: config.DATABASE_NAME,
             ExpressionAttributeNames: {
                 '#skills': 'skills',
                 '#cluster': 'cluster',
-                '#job_recommendations': 'job_recommendations'
+                '#job_recommendations': 'job_recommendations',
+                '#job_similarities': 'job_similarities'
             },
             ExpressionAttributeValues: {
                 ':skills': final_skills,
                 ':cluster': cluster,
-                ':job_recommendations': job_recommendations
+                ':job_recommendations': job_recommendations,
+                ':job_similarities': job_similarities
             },
             Key: {
                 PK: userId
             },
             ReturnValues: 'ALL_NEW',
             UpdateExpression:
-                'SET #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations'
+                'SET #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations, #job_similarities = :job_similarities'
         };
 
         try {
@@ -138,7 +149,8 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
             message: 'File uploaded successfully',
             skills: final_skills,
             cluster: cluster,
-            job_recommendations: job_recommendations
+            job_recommendations: job_recommendations,
+            job_similarities: job_similarities
         };
     } catch (err) {
         throw new GraphQLError(err.message);

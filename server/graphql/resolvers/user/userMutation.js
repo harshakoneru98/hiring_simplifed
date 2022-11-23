@@ -24,7 +24,8 @@ const updateUserProfile = async (parent, args) => {
             '#resume_uploaded': 'resume_uploaded',
             '#skills': 'skills',
             '#cluster': 'cluster',
-            '#job_recommendations': 'job_recommendations'
+            '#job_recommendations': 'job_recommendations',
+            '#job_similarities': 'job_similarities'
         },
         ExpressionAttributeValues: {
             ':firstName': user.firstName,
@@ -33,14 +34,15 @@ const updateUserProfile = async (parent, args) => {
             ':resume_uploaded': user.resume_uploaded,
             ':skills': user_skills,
             ':cluster': user.cluster,
-            ':job_recommendations': user.job_recommendations
+            ':job_recommendations': user.job_recommendations,
+            ':job_similarities': user.job_similarities
         },
         Key: {
             PK: user.userId
         },
         ReturnValues: 'ALL_NEW',
         UpdateExpression:
-            'SET #firstName = :firstName, #lastName = :lastName, #h1b_required = :h1b_required, #resume_uploaded = :resume_uploaded, #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations'
+            'SET #firstName = :firstName, #lastName = :lastName, #h1b_required = :h1b_required, #resume_uploaded = :resume_uploaded, #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations, #job_similarities = :job_similarities'
     };
 
     try {

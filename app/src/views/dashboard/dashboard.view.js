@@ -28,6 +28,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -56,8 +57,8 @@ export const data = {
 };
 
 const QUERY_JOB_DATA = gql`
-    query Skills($options: JobOptions) {
-        jobs(options: $options) {
+    query Skills($where: JobWhere) {
+        jobs(where: $where) {
             name
             Title
             city {
@@ -127,6 +128,7 @@ function JobRow(props) {
                 <TableCell>{row.city + ', ' + row.state}</TableCell>
                 <TableCell>{row.min_work_exp + ' years'}</TableCell>
                 <TableCell>{'$' + numberWithCommas(row.salary)}</TableCell>
+                <TableCell>{(row.similarity * 100).toFixed(2) + '%'}</TableCell>
                 <TableCell align="right">
                     <a href={row.job_url} target="_blank">
                         Apply
@@ -219,10 +221,22 @@ JobRow.propTypes = {
     }).isRequired
 };
 
-function createData(data, skills) {
+function createData(data, userInfo) {
+    let skills = userInfo.skills;
     const final_data = [];
+    const top_10_jobs = userInfo.job_recommendations.slice(0, 10);
+    const top_10_similarities = userInfo.job_similarities.slice(0, 10);
 
-    data?.jobs.map((job) => {
+    let top_10_map = {};
+    top_10_jobs.forEach(
+        (key, i) => (top_10_map[key] = top_10_similarities[i].toFixed(4))
+    );
+
+    const top_10_data = data?.jobs.filter((job) =>
+        top_10_jobs.includes(job.name)
+    );
+
+    top_10_data.map((job) => {
         const job_skills = job.req_skills.map((skill) => skill.name);
         const matching_skills = job_skills.filter((element) =>
             skills.includes(element)
@@ -244,9 +258,12 @@ function createData(data, skills) {
             matching_skills: matching_skills,
             missing_skills: missing_skills,
             min_work_exp: job.Work_Min,
-            job_description: job.JD
+            job_description: job.JD,
+            similarity: top_10_map[job.name]
         });
     });
+
+    final_data.sort((a, b) => b.similarity.localeCompare(a.similarity));
     return final_data;
 }
 
@@ -259,8 +276,8 @@ export default function DashboardView() {
         error: jobError
     } = useQuery(QUERY_JOB_DATA, {
         variables: {
-            options: {
-                limit: 10
+            where: {
+                name_IN: userInfo?.job_recommendations
             }
         }
     });
@@ -269,15 +286,10 @@ export default function DashboardView() {
 
     useEffect(() => {
         if (jobData && !jobLoading && userInfo) {
-            const updated_job_data = createData(jobData, userInfo.skills);
+            const updated_job_data = createData(jobData, userInfo);
             setTableData(updated_job_data);
         }
-        console.log('UserInfo : ', userInfo);
     }, [jobData, userInfo, jobLoading]);
-
-    useEffect(() => {
-        console.log('Table Data : ', tableData);
-    }, [tableData]);
 
     return (
         <Container>
@@ -290,12 +302,44 @@ export default function DashboardView() {
                                 ' ' +
                                 userInfo?.lastName +
                                 '!'}{' '}
-                            {cluster_config[userInfo?.cluster].natural_language}
+                            {
+                                cluster_config[userInfo?.cluster]
+                                    ?.natural_language
+                            }
                         </Card.Body>
                     )}
                 </Card>
             </Row>
-            <Row className="dashboard-rows"></Row>
+            <Row className="dashboard-rows">
+                <Typography className="recommendation-title">
+                    Top 10 Job Recommendations
+                </Typography>
+                <TableContainer
+                    component={Paper}
+                    className="dashboard-search-table"
+                >
+                    <Table sx={{ minWidth: 500 }} aria-label="job search table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell />
+                                <TableCell>Name</TableCell>
+                                <TableCell>Company</TableCell>
+                                <TableCell>Job Role</TableCell>
+                                <TableCell>Location</TableCell>
+                                <TableCell>Work Experience</TableCell>
+                                <TableCell>Salary</TableCell>
+                                <TableCell>Similarity</TableCell>
+                                <TableCell />
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {tableData?.map((row) => (
+                                <JobRow key={row.name} row={row} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Row>
             <Row className="dashboard-rows">
                 <Col xs={6}>
                     <Radar data={data} />

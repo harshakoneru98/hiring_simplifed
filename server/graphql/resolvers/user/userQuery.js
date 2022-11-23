@@ -30,7 +30,8 @@ const getUserDataById = async (parent, { userId }) => {
             skills: userDetails.skills,
             resume_uploaded: userDetails.resume_uploaded,
             cluster: userDetails.cluster,
-            job_recommendations: userDetails.job_recommendations
+            job_recommendations: userDetails.job_recommendations,
+            job_similarities: userDetails.job_similarities
         };
     } else {
         throw new GraphQLError('User not found');

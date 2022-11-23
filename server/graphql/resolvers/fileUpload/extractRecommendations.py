@@ -2,7 +2,7 @@ import pickle, sys
 import numpy as np
 from scipy import spatial
 
-myskills = sys.argv[1]
+myskills = sys.argv[1].split(',')
 sentence_embedder_pkl = sys.argv[2]
 data_for_recommendation_pkl = sys.argv[3]
 clustering_model_10_pkl = sys.argv[4]
@@ -47,8 +47,10 @@ data['similarity'] = data["embeddings"].apply(cosine)
 
 data["embeddings_predict"] = data["embeddings"].apply(kmeans_predict)
 
-top_100_recommendations = list(data[data['Job_family'].isin(my_job_families)].sort_values(['similarity'],ascending=False).head(100)['id'])
+data['key'] = data['id'].astype(str)+"_"+data['similarity'].astype(str)
+top_100_recommendations = list(data[data['Job_family'].isin(my_job_families)].sort_values(['similarity'],ascending=False).head(100)['key'])
 
 print(predicted_cluster)
+
 for recommendation in top_100_recommendations:
     print(recommendation)

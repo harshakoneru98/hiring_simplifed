@@ -20,6 +20,7 @@ const QUERY_USER_DATA = gql`
             resume_uploaded
             cluster
             job_recommendations
+            job_similarities
         }
     }
 `;

@@ -33,6 +33,7 @@ const QUERY_USER_DATA = gql`
             resume_uploaded
             cluster
             job_recommendations
+            job_similarities
         }
     }
 `;
@@ -231,6 +232,7 @@ export default function ProfileView() {
             const h1b_required = h1b === 'Yes' ? true : false;
             const cluster = userInfo?.cluster;
             const job_recommendations = userInfo?.job_recommendations;
+            const job_similarities = userInfo?.job_similarities;
             updateUserProfile({
                 variables: {
                     input: {
@@ -241,7 +243,8 @@ export default function ProfileView() {
                         resume_uploaded,
                         skills,
                         cluster,
-                        job_recommendations
+                        job_recommendations,
+                        job_similarities
                     }
                 }
             })
@@ -267,7 +270,8 @@ export default function ProfileView() {
             h1b_required,
             resume_uploaded,
             cluster,
-            job_recommendations
+            job_recommendations,
+            job_similarities
         } = userInfo;
         updateUserProfile({
             variables: {
@@ -279,7 +283,8 @@ export default function ProfileView() {
                     resume_uploaded,
                     skills,
                     cluster,
-                    job_recommendations
+                    job_recommendations,
+                    job_similarities
                 }
             }
         })

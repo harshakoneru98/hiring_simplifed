@@ -58,12 +58,8 @@ export default function DashboardView() {
                             {userInfo?.firstName +
                                 ' ' +
                                 userInfo?.lastName +
-                                ','}{' '}
-                            Are you looking for{' '}
-                            {cluster_config[userInfo?.cluster].job_family.join(
-                                ', '
-                            )}{' '}
-                            roles? Below recommendations are for you!
+                                '!'}{' '}
+                            {cluster_config[userInfo?.cluster].natural_language}
                         </Card.Body>
                     )}
                 </Card>

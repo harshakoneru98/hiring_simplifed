@@ -841,39 +841,48 @@ export const cluster_config = {
             'Product Manager',
             'Data Engineer'
         ],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like Software Development Engineer is a good fit for you. We also found that you have some element of Product Management skills.'
     },
     1: {
         job_family: ['Data Engineer', 'Data Scientist'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like Data Engineering with focus on Data Science is a good fit for you.'
     },
     2: {
         job_family: ['Hardware Engineer', 'Product Manager'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like you are interested in Hardware Engineer roles with element of Product Management.'
     },
     3: {
         job_family: ['Business Analyst', 'Product Manager'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks Business Analyst roles with career path in Product Management are well suited for you.'
     },
     4: {
         job_family: ['Data Scientist', 'Business Analyst', 'Data Engineer'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like full stack Data Science roles with focus on necessary skills from Data Engineering & Business Analysis are best suited for you.'
     },
     5: {
         job_family: ['Data Engineer', 'Data Scientist'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like Data Engineering with focus on Data Science is a good fit for you.'
     },
     6: {
         job_family: ['Product Manager', 'Business Analyst'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like you are well suited for Product Management roles with focus on Business Analysis.'
     },
     7: {
         job_family: ['Product Manager', 'Business Analyst'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like you are well suited for Product Management roles with focus on Business Analysis.'
     },
     8: {
         job_family: ['Product Manager', 'Business Analyst'],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like you are well suited for Product Management roles with focus on Business Analysis.'
     },
     9: {
         job_family: [
@@ -881,6 +890,7 @@ export const cluster_config = {
             'Data Engineer',
             'Machine Learning Engineer'
         ],
-        natural_language: ''
+        natural_language:
+            'Based on your profile, it looks like you are looking for full stack Data Science roles.'
     }
 };

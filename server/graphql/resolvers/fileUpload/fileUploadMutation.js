@@ -101,7 +101,8 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         });
 
         let skills = await extractSkills(userId, file_path);
-        const final_skills = [...existing_skills, ...skills].sort();
+        let final_skills = [...existing_skills, ...skills].sort();
+        let user_skills = [...new Set(final_skills)];
 
         const { job_family, job_recommendations } =
             await extractRecommendations(final_skills);

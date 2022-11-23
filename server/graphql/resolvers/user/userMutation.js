@@ -13,6 +13,8 @@ const updateUserProfile = async (parent, args) => {
 
     let documentClient = new AWS.DynamoDB.DocumentClient();
 
+    let user_skills = [...new Set(user.skills)];
+
     var params = {
         TableName: config.DATABASE_NAME,
         ExpressionAttributeNames: {
@@ -29,7 +31,7 @@ const updateUserProfile = async (parent, args) => {
             ':lastName': user.lastName,
             ':h1b_required': user.h1b_required,
             ':resume_uploaded': user.resume_uploaded,
-            ':skills': user.skills,
+            ':skills': user_skills,
             ':job_family': user.job_family,
             ':job_recommendations': user.job_recommendations
         },

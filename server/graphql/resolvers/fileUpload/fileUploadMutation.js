@@ -4,6 +4,7 @@ import { gql } from 'apollo-server-express';
 import config from '../../../config.js';
 import fs from 'fs';
 import { PythonShell } from 'python-shell';
+import { cluster_config } from './cluster_config.js';
 import fetch from 'node-fetch';
 
 AWS.config.update({
@@ -40,6 +41,39 @@ const extractSkills = async (userId, file_path) => {
     return result;
 };
 
+const extractRecommendations = async (final_skills) => {
+    let options = {
+        pythonPath: config.PYTHON_PATH,
+        scriptPath: 'graphql/resolvers/fileUpload',
+        args: [
+            final_skills,
+            './graphql/resolvers/fileUpload/sentence_embedder.pkl',
+            './graphql/resolvers/fileUpload/data_for_recommendation.pkl',
+            './graphql/resolvers/fileUpload/clustering_model_10.pkl'
+        ]
+    };
+
+    let result = await new Promise((resolve, reject) => {
+        PythonShell.run(
+            'extractRecommendations.py',
+            options,
+            async function (err, results) {
+                if (err) {
+                    throw new GraphQLError(err.message);
+                }
+
+                if (err) return reject(err);
+                return resolve(results);
+            }
+        );
+    });
+    result = result.map((i) => parseInt(i));
+    return {
+        job_family: cluster_config[result[0]],
+        job_recommendations: result.slice(1)
+    };
+};
+
 const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
     const { createReadStream, filename, mimetype, encoding } = await file;
     const s3 = new AWS.S3();
@@ -69,19 +103,27 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         let skills = await extractSkills(userId, file_path);
         const final_skills = [...existing_skills, ...skills].sort();
 
+        const { job_family, job_recommendations } =
+            await extractRecommendations(final_skills);
+
         var params = {
             TableName: config.DATABASE_NAME,
             ExpressionAttributeNames: {
-                '#skills': 'skills'
+                '#skills': 'skills',
+                '#job_family': 'job_family',
+                '#job_recommendations': 'job_recommendations'
             },
             ExpressionAttributeValues: {
-                ':skills': final_skills
+                ':skills': final_skills,
+                ':job_family': job_family,
+                ':job_recommendations': job_recommendations
             },
             Key: {
                 PK: userId
             },
             ReturnValues: 'ALL_NEW',
-            UpdateExpression: 'SET #skills = :skills'
+            UpdateExpression:
+                'SET #skills = :skills, #job_family = :job_family, #job_recommendations = :job_recommendations'
         };
 
         try {
@@ -93,7 +135,9 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         return {
             status: 200,
             message: 'File uploaded successfully',
-            skills: final_skills
+            skills: final_skills,
+            job_family: job_family,
+            job_recommendations: job_recommendations
         };
     } catch (err) {
         throw new GraphQLError(err.message);

@@ -20,21 +20,25 @@ const updateUserProfile = async (parent, args) => {
             '#lastName': 'lastName',
             '#h1b_required': 'h1b_required',
             '#resume_uploaded': 'resume_uploaded',
-            '#skills': 'skills'
+            '#skills': 'skills',
+            '#job_family': 'job_family',
+            '#job_recommendations': 'job_recommendations'
         },
         ExpressionAttributeValues: {
             ':firstName': user.firstName,
             ':lastName': user.lastName,
             ':h1b_required': user.h1b_required,
             ':resume_uploaded': user.resume_uploaded,
-            ':skills': user.skills
+            ':skills': user.skills,
+            ':job_family': user.job_family,
+            ':job_recommendations': user.job_recommendations
         },
         Key: {
             PK: user.userId
         },
         ReturnValues: 'ALL_NEW',
         UpdateExpression:
-            'SET #firstName = :firstName, #lastName = :lastName, #h1b_required = :h1b_required, #resume_uploaded = :resume_uploaded, #skills = :skills'
+            'SET #firstName = :firstName, #lastName = :lastName, #h1b_required = :h1b_required, #resume_uploaded = :resume_uploaded, #skills = :skills, #job_family = :job_family, #job_recommendations = :job_recommendations'
     };
 
     try {

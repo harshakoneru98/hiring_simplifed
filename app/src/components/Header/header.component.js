@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { gql, useQuery } from '@apollo/client';
 import AuthContext from '../../context/auth-context';
 import { userDataByID } from '../../reduxSlices/userDataSlice';
@@ -18,6 +18,8 @@ const QUERY_USER_DATA = gql`
             email
             skills
             resume_uploaded
+            job_family
+            job_recommendations
         }
     }
 `;

@@ -43,7 +43,9 @@ const createUser = async (parent, args) => {
                 email: user.email,
                 password: hashedPassword,
                 skills: [],
-                resume_uploaded: false
+                resume_uploaded: false,
+                job_family: [],
+                job_recommendations: []
             }
         };
 

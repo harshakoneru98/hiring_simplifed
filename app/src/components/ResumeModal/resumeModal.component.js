@@ -21,6 +21,8 @@ const UPLOAD_RESUME_MUTATION = gql`
             status
             message
             skills
+            job_family
+            job_recommendations
         }
     }
 `;
@@ -43,6 +45,8 @@ const QUERY_USER_DATA = gql`
             email
             skills
             resume_uploaded
+            job_family
+            job_recommendations
         }
     }
 `;
@@ -92,6 +96,9 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
                 userInfo;
             resume_uploaded = true;
             const skills = resumeData?.uploadResumeFile?.skills;
+            const job_family = resumeData?.uploadResumeFile?.job_family;
+            const job_recommendations =
+                resumeData?.uploadResumeFile?.job_recommendations;
 
             updateUserProfile({
                 variables: {
@@ -101,7 +108,9 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
                         lastName,
                         h1b_required,
                         resume_uploaded,
-                        skills
+                        skills,
+                        job_family,
+                        job_recommendations
                     }
                 }
             })

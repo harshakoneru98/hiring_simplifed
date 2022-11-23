@@ -31,6 +31,8 @@ const QUERY_USER_DATA = gql`
             email
             skills
             resume_uploaded
+            job_family
+            job_recommendations
         }
     }
 `;
@@ -227,6 +229,8 @@ export default function ProfileView() {
             h1b !== ''
         ) {
             const h1b_required = h1b === 'Yes' ? true : false;
+            const job_family = userInfo?.job_family;
+            const job_recommendations = userInfo?.job_recommendations;
             updateUserProfile({
                 variables: {
                     input: {
@@ -235,7 +239,9 @@ export default function ProfileView() {
                         lastName,
                         h1b_required,
                         resume_uploaded,
-                        skills
+                        skills,
+                        job_family,
+                        job_recommendations
                     }
                 }
             })
@@ -255,7 +261,14 @@ export default function ProfileView() {
             skills.push(skill.value);
         });
 
-        const { firstName, lastName, h1b_required, resume_uploaded } = userInfo;
+        const {
+            firstName,
+            lastName,
+            h1b_required,
+            resume_uploaded,
+            job_family,
+            job_recommendations
+        } = userInfo;
         updateUserProfile({
             variables: {
                 input: {
@@ -264,7 +277,9 @@ export default function ProfileView() {
                     lastName,
                     h1b_required,
                     resume_uploaded,
-                    skills
+                    skills,
+                    job_family,
+                    job_recommendations
                 }
             }
         })

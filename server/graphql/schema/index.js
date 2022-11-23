@@ -29,6 +29,8 @@ export const typeDefs = gql`
         h1b_required: Boolean!
         resume_uploaded: Boolean!
         skills: [String]
+        job_family: [String!]
+        job_recommendations: [Int!]
     }
 
     type messageResponse @exclude {
@@ -40,6 +42,8 @@ export const typeDefs = gql`
         status: Int!
         message: String!
         skills: [String]
+        job_family: [String!]
+        job_recommendations: [Int!]
     }
 
     type AuthData @exclude {
@@ -55,6 +59,8 @@ export const typeDefs = gql`
         email: String!
         skills: [String]
         resume_uploaded: Boolean!
+        job_family: [String]
+        job_recommendations: [Int]
     }
 
     type Skill @exclude(operations: [CREATE, UPDATE, DELETE]) {

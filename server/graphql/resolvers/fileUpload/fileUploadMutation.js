@@ -4,7 +4,6 @@ import { gql } from 'apollo-server-express';
 import config from '../../../config.js';
 import fs from 'fs';
 import { PythonShell } from 'python-shell';
-import { cluster_config } from './cluster_config.js';
 import fetch from 'node-fetch';
 
 AWS.config.update({
@@ -69,7 +68,7 @@ const extractRecommendations = async (final_skills) => {
     });
     result = result.map((i) => parseInt(i));
     return {
-        job_family: cluster_config[result[0]],
+        cluster: [result[0]],
         job_recommendations: result.slice(1)
     };
 };
@@ -104,19 +103,20 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         let final_skills = [...existing_skills, ...skills].sort();
         let user_skills = [...new Set(final_skills)];
 
-        const { job_family, job_recommendations } =
-            await extractRecommendations(final_skills);
+        const { cluster, job_recommendations } = await extractRecommendations(
+            final_skills
+        );
 
         var params = {
             TableName: config.DATABASE_NAME,
             ExpressionAttributeNames: {
                 '#skills': 'skills',
-                '#job_family': 'job_family',
+                '#cluster': 'cluster',
                 '#job_recommendations': 'job_recommendations'
             },
             ExpressionAttributeValues: {
                 ':skills': final_skills,
-                ':job_family': job_family,
+                ':cluster': cluster,
                 ':job_recommendations': job_recommendations
             },
             Key: {
@@ -124,7 +124,7 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
             },
             ReturnValues: 'ALL_NEW',
             UpdateExpression:
-                'SET #skills = :skills, #job_family = :job_family, #job_recommendations = :job_recommendations'
+                'SET #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations'
         };
 
         try {
@@ -137,7 +137,7 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
             status: 200,
             message: 'File uploaded successfully',
             skills: final_skills,
-            job_family: job_family,
+            cluster: cluster,
             job_recommendations: job_recommendations
         };
     } catch (err) {

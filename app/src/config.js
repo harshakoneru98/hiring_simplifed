@@ -833,3 +833,54 @@ export const defaultValues = {
         salary: false
     }
 };
+
+export const cluster_config = {
+    0: {
+        job_family: [
+            'Software Development Engineer',
+            'Product Manager',
+            'Data Engineer'
+        ],
+        natural_language: ''
+    },
+    1: {
+        job_family: ['Data Engineer', 'Data Scientist'],
+        natural_language: ''
+    },
+    2: {
+        job_family: ['Hardware Engineer', 'Product Manager'],
+        natural_language: ''
+    },
+    3: {
+        job_family: ['Business Analyst', 'Product Manager'],
+        natural_language: ''
+    },
+    4: {
+        job_family: ['Data Scientist', 'Business Analyst', 'Data Engineer'],
+        natural_language: ''
+    },
+    5: {
+        job_family: ['Data Engineer', 'Data Scientist'],
+        natural_language: ''
+    },
+    6: {
+        job_family: ['Product Manager', 'Business Analyst'],
+        natural_language: ''
+    },
+    7: {
+        job_family: ['Product Manager', 'Business Analyst'],
+        natural_language: ''
+    },
+    8: {
+        job_family: ['Product Manager', 'Business Analyst'],
+        natural_language: ''
+    },
+    9: {
+        job_family: [
+            'Data Scientist',
+            'Data Engineer',
+            'Machine Learning Engineer'
+        ],
+        natural_language: ''
+    }
+};

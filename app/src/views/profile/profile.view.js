@@ -31,7 +31,7 @@ const QUERY_USER_DATA = gql`
             email
             skills
             resume_uploaded
-            job_family
+            cluster
             job_recommendations
         }
     }
@@ -229,7 +229,7 @@ export default function ProfileView() {
             h1b !== ''
         ) {
             const h1b_required = h1b === 'Yes' ? true : false;
-            const job_family = userInfo?.job_family;
+            const cluster = userInfo?.cluster;
             const job_recommendations = userInfo?.job_recommendations;
             updateUserProfile({
                 variables: {
@@ -240,7 +240,7 @@ export default function ProfileView() {
                         h1b_required,
                         resume_uploaded,
                         skills,
-                        job_family,
+                        cluster,
                         job_recommendations
                     }
                 }
@@ -266,7 +266,7 @@ export default function ProfileView() {
             lastName,
             h1b_required,
             resume_uploaded,
-            job_family,
+            cluster,
             job_recommendations
         } = userInfo;
         updateUserProfile({
@@ -278,7 +278,7 @@ export default function ProfileView() {
                     h1b_required,
                     resume_uploaded,
                     skills,
-                    job_family,
+                    cluster,
                     job_recommendations
                 }
             }

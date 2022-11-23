@@ -18,7 +18,7 @@ const QUERY_USER_DATA = gql`
             email
             skills
             resume_uploaded
-            job_family
+            cluster
             job_recommendations
         }
     }

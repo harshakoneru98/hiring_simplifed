@@ -29,7 +29,7 @@ const getUserDataById = async (parent, { userId }) => {
             email: userDetails.email,
             skills: userDetails.skills,
             resume_uploaded: userDetails.resume_uploaded,
-            job_family: userDetails.job_family,
+            cluster: userDetails.cluster,
             job_recommendations: userDetails.job_recommendations
         };
     } else {

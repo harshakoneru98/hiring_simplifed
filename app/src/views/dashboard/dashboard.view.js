@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './dashboard.scss';
 import {
     Chart as ChartJS,
@@ -13,6 +13,8 @@ import { Radar } from 'react-chartjs-2';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import { cluster_config } from '../../config';
 import { useSelector } from 'react-redux';
 
 ChartJS.register(
@@ -40,18 +42,40 @@ export const data = {
 export default function DashboardView() {
     const userInfo = useSelector((state) => state?.userData?.value);
 
-    console.log('UserInfo : ', userInfo);
+    useEffect(() => {
+        if (userInfo) {
+            console.log('UserInfo : ', userInfo);
+        }
+    }, [userInfo]);
+
     return (
         <Container>
-            <Row></Row>
-            <Row></Row>
-            <Row>
+            <Row className="dashboard-rows">
+                <Card>
+                    {userInfo.firstName && (
+                        <Card.Body className="dasboard-label-header">
+                            Hello{' '}
+                            {userInfo?.firstName +
+                                ' ' +
+                                userInfo?.lastName +
+                                ','}{' '}
+                            Are you looking for{' '}
+                            {cluster_config[userInfo?.cluster].job_family.join(
+                                ', '
+                            )}{' '}
+                            roles? Below recommendations are for you!
+                        </Card.Body>
+                    )}
+                </Card>
+            </Row>
+            <Row className="dashboard-rows"></Row>
+            <Row className="dashboard-rows">
                 <Col xs={6}>
                     <Radar data={data} />
                 </Col>
                 <Col xs={6}></Col>
             </Row>
-            <Row></Row>
+            <Row className="dashboard-rows"></Row>
         </Container>
     );
 }

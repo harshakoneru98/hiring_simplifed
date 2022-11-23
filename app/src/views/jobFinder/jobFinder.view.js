@@ -83,6 +83,10 @@ const QUERY_JOB_DATA = gql`
     }
 `;
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function JobRow(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
@@ -114,7 +118,7 @@ function JobRow(props) {
                 </TableCell>
                 <TableCell>{row.city + ', ' + row.state}</TableCell>
                 <TableCell>{row.min_work_exp + ' years'}</TableCell>
-                <TableCell>{row.salary}</TableCell>
+                <TableCell>{'$' + numberWithCommas(row.salary)}</TableCell>
                 <TableCell align="right">
                     <a href={row.job_url} target="_blank">
                         Apply
@@ -693,7 +697,7 @@ export default function JobFinderView() {
                                     <TableCell />
                                     <TableCell>Name</TableCell>
                                     <TableCell>Company</TableCell>
-                                    <TableCell>Job Type</TableCell>
+                                    <TableCell>Job Role</TableCell>
                                     <TableCell>Location</TableCell>
                                     <TableCell>Work Experience</TableCell>
                                     <TableCell>Salary</TableCell>

@@ -29,7 +29,7 @@ export const typeDefs = gql`
         h1b_required: Boolean!
         resume_uploaded: Boolean!
         skills: [String]
-        job_family: [String!]
+        cluster: [Int!]
         job_recommendations: [Int!]
     }
 
@@ -42,7 +42,7 @@ export const typeDefs = gql`
         status: Int!
         message: String!
         skills: [String]
-        job_family: [String!]
+        cluster: [Int!]
         job_recommendations: [Int!]
     }
 
@@ -59,7 +59,7 @@ export const typeDefs = gql`
         email: String!
         skills: [String]
         resume_uploaded: Boolean!
-        job_family: [String]
+        cluster: [Int]
         job_recommendations: [Int]
     }
 

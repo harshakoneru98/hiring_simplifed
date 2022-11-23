@@ -28,7 +28,9 @@ const getUserDataById = async (parent, { userId }) => {
             h1b_required: userDetails.h1b_required,
             email: userDetails.email,
             skills: userDetails.skills,
-            resume_uploaded: userDetails.resume_uploaded
+            resume_uploaded: userDetails.resume_uploaded,
+            job_family: userDetails.job_family,
+            job_recommendations: userDetails.job_recommendations
         };
     } else {
         throw new GraphQLError('User not found');

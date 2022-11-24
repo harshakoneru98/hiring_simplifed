@@ -45,19 +45,6 @@ ChartJS.register(
     Legend
 );
 
-export const data = {
-    labels: ['Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5'],
-    datasets: [
-        {
-            label: 'Frequency',
-            data: [25, 29, 23, 25, 24],
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }
-    ]
-};
-
 const QUERY_JOB_DATA = gql`
     query Skills($where: JobWhere) {
         jobs(where: $where) {
@@ -98,6 +85,20 @@ const QUERY_COMPANIES_BY_FAMILY_DATA = gql`
     query GetCompanyDataByFamily($jobFamily: String!) {
         getCompanyDataByFamily(job_family: $jobFamily) {
             companies
+        }
+    }
+`;
+
+const QUERY_TOP_SKILLS_BY_COMPANY = gql`
+    query GetTopSkillsByCompany($companyName: String!, $jobFamily: String!) {
+        getTopSkillsByCompany(
+            company_name: $companyName
+            job_family: $jobFamily
+        ) {
+            top_skills {
+                skill
+                skill_count
+            }
         }
     }
 `;
@@ -352,8 +353,83 @@ export default function DashboardView() {
         }
     };
 
-    console.log('Job Family : ', selectedJobFamily);
-    console.log('Company : ', selectedCompany);
+    const { data: companySkillsData } = useQuery(QUERY_TOP_SKILLS_BY_COMPANY, {
+        variables: {
+            jobFamily: selectedJobFamily,
+            companyName: selectedCompany
+        }
+    });
+
+    const { data: allSkillsData } = useQuery(QUERY_TOP_SKILLS_BY_COMPANY, {
+        variables: {
+            jobFamily: selectedJobFamily,
+            companyName: ''
+        }
+    });
+
+    const [allCompanySkills, setAllCompanySkills] = useState([]);
+    const [specificCompanySkills, setSpecificCompanySkills] = useState([]);
+
+    const [allCompanyFrequency, setAllCompanyFrequency] = useState([]);
+    const [specificCompanyFrequency, setSpecificCompanyFrequency] = useState(
+        []
+    );
+
+    const all_companies_data = {
+        labels: allCompanySkills,
+        datasets: [
+            {
+                label: 'Frequency',
+                data: allCompanyFrequency,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+
+    const specific_companies_data = {
+        labels: specificCompanySkills,
+        datasets: [
+            {
+                label: 'Frequency',
+                data: specificCompanyFrequency,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+
+    useEffect(() => {
+        if (companySkillsData) {
+            setSpecificCompanySkills(
+                companySkillsData.getTopSkillsByCompany.top_skills.map(
+                    (a) => a.skill
+                )
+            );
+            setSpecificCompanyFrequency(
+                companySkillsData.getTopSkillsByCompany.top_skills.map(
+                    (a) => a.skill_count
+                )
+            );
+        }
+    }, [companySkillsData]);
+
+    useEffect(() => {
+        if (allSkillsData) {
+            setAllCompanySkills(
+                allSkillsData.getTopSkillsByCompany.top_skills.map(
+                    (a) => a.skill
+                )
+            );
+            setAllCompanyFrequency(
+                allSkillsData.getTopSkillsByCompany.top_skills.map(
+                    (a) => a.skill_count
+                )
+            );
+        }
+    }, [allSkillsData]);
 
     return (
         <Container>
@@ -469,10 +545,10 @@ export default function DashboardView() {
             </Row>
             <Row className="dashboard-rows skill-match">
                 <Col xs={6}>
-                    <Radar data={data} />
+                    <Radar data={all_companies_data} />
                 </Col>
                 <Col xs={6}>
-                    <Radar data={data} />
+                    <Radar data={specific_companies_data} />
                 </Col>
             </Row>
             <Row className="dashboard-rows">

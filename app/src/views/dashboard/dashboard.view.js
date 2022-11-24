@@ -33,6 +33,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 ChartJS.register(
     RadialLinearScale,
@@ -88,6 +90,14 @@ const QUERY_JOB_DATA = gql`
             req_skills {
                 name
             }
+        }
+    }
+`;
+
+const QUERY_COMPANIES_BY_FAMILY_DATA = gql`
+    query GetCompanyDataByFamily($jobFamily: String!) {
+        getCompanyDataByFamily(job_family: $jobFamily) {
+            companies
         }
     }
 `;
@@ -290,6 +300,61 @@ export default function DashboardView() {
         }
     }, [jobData, userInfo, jobLoading]);
 
+    const [selectedJobFamily, setSelectedJobFamily] = useState('');
+    const [selectedCompany, setSelectedCompany] = useState('');
+
+    useEffect(() => {
+        if (userInfo) {
+            setSelectedJobFamily(
+                cluster_config[userInfo.cluster]?.job_family[0]
+            );
+        }
+    }, [userInfo]);
+
+    const { data: companyData, refetchCompanyData } = useQuery(
+        QUERY_COMPANIES_BY_FAMILY_DATA,
+        {
+            variables: {
+                jobFamily: selectedJobFamily
+            }
+        }
+    );
+
+    useEffect(() => {
+        if (companyData) {
+            setSelectedCompany(
+                companyData?.getCompanyDataByFamily?.companies[0]
+            );
+        }
+    }, [companyData]);
+
+    const handleJobFamilyChange = (event, newValue) => {
+        if (newValue !== null) {
+            setSelectedJobFamily(newValue);
+        } else {
+            setSelectedJobFamily(
+                cluster_config[userInfo.cluster]?.job_family[0]
+            );
+
+            refetchCompanyData({
+                jobFamily: cluster_config[userInfo.cluster]?.job_family[0]
+            });
+        }
+    };
+
+    const handleCompanyChange = (event, newValue) => {
+        if (newValue !== null) {
+            setSelectedCompany(newValue);
+        } else {
+            setSelectedCompany(
+                companyData?.getCompanyDataByFamily?.companies[0]
+            );
+        }
+    };
+
+    console.log('Job Family : ', selectedJobFamily);
+    console.log('Company : ', selectedCompany);
+
     return (
         <Container>
             <Row className="dashboard-rows">
@@ -344,9 +409,71 @@ export default function DashboardView() {
                     Company Skill Matching
                 </Typography>
                 <Col xs={6}>
+                    {userInfo?.cluster && (
+                        <Autocomplete
+                            disablePortal
+                            id="size-small-outlined-multi"
+                            size="small"
+                            onChange={handleJobFamilyChange}
+                            options={
+                                cluster_config[userInfo?.cluster]?.job_family
+                            }
+                            value={
+                                selectedJobFamily
+                                    ? selectedJobFamily
+                                    : cluster_config[userInfo?.cluster]
+                                          ?.job_family[0]
+                            }
+                            getOptionLabel={(option) => option}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    placeholder="Job Families"
+                                />
+                            )}
+                            className="dropdown-dashboard"
+                        />
+                    )}
+                    <p className="skillmap-text">All Companies</p>
+                </Col>
+                <Col xs={6}>
+                    {userInfo?.cluster &&
+                        companyData?.getCompanyDataByFamily && (
+                            <Autocomplete
+                                disablePortal
+                                id="size-small-outlined-multi"
+                                size="small"
+                                onChange={handleCompanyChange}
+                                options={
+                                    companyData?.getCompanyDataByFamily
+                                        ?.companies
+                                }
+                                value={
+                                    selectedCompany
+                                        ? selectedCompany
+                                        : companyData?.getCompanyDataByFamily
+                                              ?.companies[0]
+                                }
+                                getOptionLabel={(option) => option}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        placeholder="Companies"
+                                    />
+                                )}
+                                className="dropdown-dashboard"
+                            />
+                        )}
+                    <p className="skillmap-text">{selectedCompany}</p>
+                </Col>
+            </Row>
+            <Row className="dashboard-rows skill-match">
+                <Col xs={6}>
                     <Radar data={data} />
                 </Col>
-                <Col xs={6}></Col>
+                <Col xs={6}>
+                    <Radar data={data} />
+                </Col>
             </Row>
             <Row className="dashboard-rows">
                 <Typography className="dashboard-title">

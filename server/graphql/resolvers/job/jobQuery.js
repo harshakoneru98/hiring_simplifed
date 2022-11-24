@@ -97,8 +97,6 @@ const getCompanyDataByFamily = async (parent, { job_family }) => {
             ORDER BY names
         `;
 
-        console.log(readQuery);
-
         const readResult = await session.executeRead((tx) => tx.run(readQuery));
 
         let final_result = [];

@@ -156,4 +156,46 @@ const getTopSkillsByCompany = async (parent, { company_name, job_family }) => {
     }
 };
 
-export default { getJobData, getCompanyDataByFamily, getTopSkillsByCompany };
+const getRecommendationStateCount = async (parent, { jobIds }) => {
+    const driver = neo4j.driver(
+        config.NEO4J_URI,
+        neo4j.auth.basic(config.NEO4J_USER, config.NEO4J_PASSWORD)
+    );
+
+    try {
+        const session = driver.session({ database: 'neo4j' });
+
+        const readQuery = `
+            MATCH (job:Job) - [:Located_in_State] -> (state:State)
+            WHERE job.name IN [${jobIds}]
+            AND state.name <> "Remote"
+            RETURN state.name as state_code, state.fullName as state_name, count(state.name) as job_count
+            ORDER BY job_count DESC
+        `;
+
+        const readResult = await session.executeRead((tx) => tx.run(readQuery));
+
+        let final_result = [];
+
+        readResult.records.forEach((record) => {
+            final_result.push({
+                state_code: record.get('state_code'),
+                state_name: record.get('state_name'),
+                job_count: record.get('job_count')
+            });
+        });
+
+        return { state_count: final_result };
+    } catch (error) {
+        throw new GraphQLError(error.message);
+    } finally {
+        await driver.close();
+    }
+};
+
+export default {
+    getJobData,
+    getCompanyDataByFamily,
+    getTopSkillsByCompany,
+    getRecommendationStateCount
+};

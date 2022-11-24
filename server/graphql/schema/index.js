@@ -170,6 +170,16 @@ export const typeDefs = gql`
         top_skills: [SkillFrequency]
     }
 
+    type StateCount @exclude {
+        state_code: String!
+        state_name: String!
+        job_count: Int!
+    }
+
+    type TopSkillsResponse @exclude {
+        state_count: [StateCount]
+    }
+
     type Query {
         user(email: String!): User!
         login(email: String!, password: String!): AuthData!
@@ -180,6 +190,7 @@ export const typeDefs = gql`
             company_name: String!
             job_family: String!
         ): TopSkillsResponse
+        getRecommendationStateCount(jobIds: [Int!]!): TopSkillsResponse
     }
 
     type Mutation {

@@ -90,6 +90,18 @@ const QUERY_COMPANIES_BY_FAMILY_DATA = gql`
     }
 `;
 
+const QUERY_STATE_COUNT = gql`
+    query GetRecommendationStateCount($jobIds: [Int!]!) {
+        getRecommendationStateCount(jobIds: $jobIds) {
+            state_count {
+                job_count
+                state_code
+                state_name
+            }
+        }
+    }
+`;
+
 const QUERY_TOP_SKILLS_BY_COMPANY = gql`
     query GetTopSkillsByCompany($companyName: String!, $jobFamily: String!) {
         getTopSkillsByCompany(
@@ -321,6 +333,53 @@ export default function DashboardView() {
             }
         }
     );
+
+    const { data: stateCountData } = useQuery(QUERY_STATE_COUNT, {
+        variables: {
+            jobIds: userInfo?.job_recommendations
+        }
+    });
+
+    const colorGeneration = (count) => {
+        if (count > 20) {
+            return '#c61a09';
+        } else if (count > 15) {
+            return '#ed3419';
+        } else if (count > 10) {
+            return '#ff4122';
+        } else if (count > 5) {
+            return '#ff8164';
+        } else if (count > 1) {
+            return '#ffa590';
+        } else {
+            return '#ffc9bb';
+        }
+    };
+
+    const createMapConfig = (stateData) => {
+        let config = {};
+        stateData.map((data) => {
+            config[data.state_code] = {
+                fill: colorGeneration(data.job_count)
+            };
+        });
+        return config;
+    };
+
+    const [stateMap, setStateMap] = useState({});
+
+    useEffect(() => {
+        if (stateCountData) {
+            console.log(
+                'State Count : ',
+                stateCountData.getRecommendationStateCount.state_count
+            );
+            const state_map_config = createMapConfig(
+                stateCountData.getRecommendationStateCount.state_count
+            );
+            setStateMap(state_map_config);
+        }
+    }, [stateCountData]);
 
     useEffect(() => {
         if (companyData) {
@@ -579,7 +638,7 @@ export default function DashboardView() {
                 <Col xs={12} className="usa-map-col">
                     <USAMap
                         width="80%"
-                        customize={statesCustomConfig()}
+                        customize={stateMap}
                         onClick={handleMap}
                     />
                 </Col>

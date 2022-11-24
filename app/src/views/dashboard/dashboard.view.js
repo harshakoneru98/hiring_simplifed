@@ -35,6 +35,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import USAMap from 'react-usa-map';
 
 ChartJS.register(
     RadialLinearScale,
@@ -431,6 +432,26 @@ export default function DashboardView() {
         }
     }, [allSkillsData]);
 
+    const statesCustomConfig = () => {
+        return {
+            NJ: {
+                fill: 'navy',
+                clickHandler: (event) =>
+                    console.log('Custom handler for NJ', event.target.dataset)
+            },
+            NY: {
+                fill: '#CC0000'
+            },
+            CA: {
+                fill: 'black'
+            }
+        };
+    };
+
+    const handleMap = (event) => {
+        alert(event.target.dataset.name);
+    };
+
     return (
         <Container>
             <Row className="dashboard-rows">
@@ -555,6 +576,13 @@ export default function DashboardView() {
                 <Typography className="dashboard-title">
                     Location based Salary
                 </Typography>
+                <Col xs={12} className="usa-map-col">
+                    <USAMap
+                        width="80%"
+                        customize={statesCustomConfig()}
+                        onClick={handleMap}
+                    />
+                </Col>
             </Row>
         </Container>
     );

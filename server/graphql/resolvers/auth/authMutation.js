@@ -46,7 +46,7 @@ const createUser = async (parent, args) => {
                 resume_uploaded: false,
                 cluster: [],
                 job_recommendations: [],
-                job_similarities: []
+                top_similarities: ''
             }
         };
 

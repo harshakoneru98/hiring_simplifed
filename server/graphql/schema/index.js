@@ -31,7 +31,7 @@ export const typeDefs = gql`
         skills: [String]
         cluster: [Int!]
         job_recommendations: [Int!]
-        job_similarities: [Float!]
+        top_similarities: String!
     }
 
     type messageResponse @exclude {
@@ -45,7 +45,7 @@ export const typeDefs = gql`
         skills: [String]
         cluster: [Int!]
         job_recommendations: [Int!]
-        job_similarities: [Float!]
+        top_similarities: String!
     }
 
     type AuthData @exclude {
@@ -63,7 +63,7 @@ export const typeDefs = gql`
         resume_uploaded: Boolean!
         cluster: [Int]
         job_recommendations: [Int]
-        job_similarities: [Float]
+        top_similarities: String!
     }
 
     type Skill @exclude(operations: [CREATE, UPDATE, DELETE]) {

@@ -116,26 +116,39 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
         const { cluster, job_recommendations, job_similarities } =
             await extractRecommendations(final_skills);
 
+        const top_10_jobs = job_recommendations.slice(0, 10);
+        const top_10_similarities = job_similarities.slice(0, 10);
+
+        let top_10_map = {};
+        top_10_jobs.forEach(
+            (key, i) =>
+                (top_10_map[key] = (
+                    top_10_similarities[i].toFixed(4) * 100
+                ).toFixed(2))
+        );
+
+        let top_similarities = JSON.stringify(top_10_map);
+
         var params = {
             TableName: config.DATABASE_NAME,
             ExpressionAttributeNames: {
                 '#skills': 'skills',
                 '#cluster': 'cluster',
                 '#job_recommendations': 'job_recommendations',
-                '#job_similarities': 'job_similarities'
+                '#top_similarities': 'top_similarities'
             },
             ExpressionAttributeValues: {
                 ':skills': final_skills,
                 ':cluster': cluster,
                 ':job_recommendations': job_recommendations,
-                ':job_similarities': job_similarities
+                ':top_similarities': top_similarities
             },
             Key: {
                 PK: userId
             },
             ReturnValues: 'ALL_NEW',
             UpdateExpression:
-                'SET #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations, #job_similarities = :job_similarities'
+                'SET #skills = :skills, #cluster = :cluster, #job_recommendations = :job_recommendations, #top_similarities = :top_similarities'
         };
 
         try {
@@ -150,7 +163,7 @@ const uploadResumeFile = async (parent, { file, userId, existing_skills }) => {
             skills: final_skills,
             cluster: cluster,
             job_recommendations: job_recommendations,
-            job_similarities: job_similarities
+            top_similarities: top_similarities
         };
     } catch (err) {
         throw new GraphQLError(err.message);

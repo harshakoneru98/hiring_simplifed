@@ -23,7 +23,7 @@ const UPLOAD_RESUME_MUTATION = gql`
             skills
             cluster
             job_recommendations
-            job_similarities
+            top_similarities
         }
     }
 `;
@@ -48,7 +48,7 @@ const QUERY_USER_DATA = gql`
             resume_uploaded
             cluster
             job_recommendations
-            job_similarities
+            top_similarities
         }
     }
 `;
@@ -101,8 +101,8 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
             const cluster = resumeData?.uploadResumeFile?.cluster;
             const job_recommendations =
                 resumeData?.uploadResumeFile?.job_recommendations;
-            const job_similarities =
-                resumeData?.uploadResumeFile?.job_similarities;
+            const top_similarities =
+                resumeData?.uploadResumeFile?.top_similarities;
 
             updateUserProfile({
                 variables: {
@@ -115,7 +115,7 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
                         skills,
                         cluster,
                         job_recommendations,
-                        job_similarities
+                        top_similarities
                     }
                 }
             })

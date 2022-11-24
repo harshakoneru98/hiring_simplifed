@@ -128,7 +128,7 @@ function JobRow(props) {
                 <TableCell>{row.city + ', ' + row.state}</TableCell>
                 <TableCell>{row.min_work_exp + ' years'}</TableCell>
                 <TableCell>{'$' + numberWithCommas(row.salary)}</TableCell>
-                <TableCell>{(row.similarity * 100).toFixed(2) + '%'}</TableCell>
+                <TableCell>{row.similarity + '%'}</TableCell>
                 <TableCell align="right">
                     <a href={row.job_url} target="_blank">
                         Apply
@@ -221,22 +221,10 @@ JobRow.propTypes = {
     }).isRequired
 };
 
-function createData(data, userInfo) {
-    let skills = userInfo.skills;
+function createData(data, skills, top_10_recommendations) {
     const final_data = [];
-    const top_10_jobs = userInfo.job_recommendations.slice(0, 10);
-    const top_10_similarities = userInfo.job_similarities.slice(0, 10);
 
-    let top_10_map = {};
-    top_10_jobs.forEach(
-        (key, i) => (top_10_map[key] = top_10_similarities[i].toFixed(4))
-    );
-
-    const top_10_data = data?.jobs.filter((job) =>
-        top_10_jobs.includes(job.name)
-    );
-
-    top_10_data.map((job) => {
+    data?.jobs?.map((job) => {
         const job_skills = job.req_skills.map((skill) => skill.name);
         const matching_skills = job_skills.filter((element) =>
             skills.includes(element)
@@ -259,7 +247,7 @@ function createData(data, userInfo) {
             missing_skills: missing_skills,
             min_work_exp: job.Work_Min,
             job_description: job.JD,
-            similarity: top_10_map[job.name]
+            similarity: top_10_recommendations[job.name]
         });
     });
 
@@ -269,6 +257,13 @@ function createData(data, userInfo) {
 
 export default function DashboardView() {
     const userInfo = useSelector((state) => state?.userData?.value);
+    const top_10_recommendations = userInfo?.top_similarities
+        ? JSON.parse(userInfo?.top_similarities)
+        : {};
+    const top_10_job_ids =
+        top_10_recommendations !== {}
+            ? Object.keys(top_10_recommendations).map((i) => parseInt(i))
+            : [];
 
     const {
         data: jobData,
@@ -277,7 +272,7 @@ export default function DashboardView() {
     } = useQuery(QUERY_JOB_DATA, {
         variables: {
             where: {
-                name_IN: userInfo?.job_recommendations
+                name_IN: top_10_job_ids
             }
         }
     });
@@ -286,7 +281,11 @@ export default function DashboardView() {
 
     useEffect(() => {
         if (jobData && !jobLoading && userInfo) {
-            const updated_job_data = createData(jobData, userInfo);
+            const updated_job_data = createData(
+                jobData,
+                userInfo?.skills,
+                top_10_recommendations
+            );
             setTableData(updated_job_data);
         }
     }, [jobData, userInfo, jobLoading]);

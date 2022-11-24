@@ -310,7 +310,7 @@ export default function DashboardView() {
                 </Card>
             </Row>
             <Row className="dashboard-rows">
-                <Typography className="recommendation-title">
+                <Typography className="dashboard-title">
                     Top 10 Job Recommendations
                 </Typography>
                 <TableContainer
@@ -340,12 +340,19 @@ export default function DashboardView() {
                 </TableContainer>
             </Row>
             <Row className="dashboard-rows">
+                <Typography className="dashboard-title">
+                    Company Skill Matching
+                </Typography>
                 <Col xs={6}>
                     <Radar data={data} />
                 </Col>
                 <Col xs={6}></Col>
             </Row>
-            <Row className="dashboard-rows"></Row>
+            <Row className="dashboard-rows">
+                <Typography className="dashboard-title">
+                    Location based Salary
+                </Typography>
+            </Row>
         </Container>
     );
 }

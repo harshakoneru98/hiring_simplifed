@@ -193,9 +193,56 @@ const getRecommendationStateCount = async (parent, { jobIds }) => {
     }
 };
 
+const getStateSalaryCount = async (parent, { jobIds, jobFamily }) => {
+    const driver = neo4j.driver(
+        config.NEO4J_URI,
+        neo4j.auth.basic(config.NEO4J_USER, config.NEO4J_PASSWORD)
+    );
+
+    try {
+        const session = driver.session({ database: 'neo4j' });
+
+        const readQuery =
+            `
+            MATCH (job:Job) - [:Located_in_State] -> (state:State)
+            MATCH (job) - [:has_job_family] -> (job_family:Job_Family)
+            WHERE job.name IN [${jobIds}] AND state.name <> "Remote" AND 
+            job_family.name IN [` +
+            jobFamily.map((i) => '"' + i + '"') +
+            `]
+            RETURN state.name as state_code, state.fullName as state_name, job_family.name as job_role, 
+            min(job.Salary) as min_salary, max(job.Salary) as max_salary, avg(job.Salary) as avg_salary, 
+            count(state.name) as state_count
+        `;
+
+        const readResult = await session.executeRead((tx) => tx.run(readQuery));
+
+        let final_result = [];
+
+        readResult.records.forEach((record) => {
+            final_result.push({
+                state_code: record.get('state_code'),
+                state_name: record.get('state_name'),
+                job_role: record.get('job_role'),
+                min_salary: record.get('min_salary'),
+                max_salary: record.get('max_salary'),
+                avg_salary: parseInt(record.get('avg_salary')),
+                state_count: record.get('state_count')
+            });
+        });
+
+        return { state_family_count: final_result };
+    } catch (error) {
+        throw new GraphQLError(error.message);
+    } finally {
+        await driver.close();
+    }
+};
+
 export default {
     getJobData,
     getCompanyDataByFamily,
     getTopSkillsByCompany,
-    getRecommendationStateCount
+    getRecommendationStateCount,
+    getStateSalaryCount
 };

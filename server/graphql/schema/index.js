@@ -180,6 +180,20 @@ export const typeDefs = gql`
         state_count: [StateCount]
     }
 
+    type StateSalaryFamily @exclude {
+        state_code: String!
+        state_name: String!
+        job_role: String!
+        min_salary: Int!
+        max_salary: Int!
+        avg_salary: Int!
+        state_count: Int!
+    }
+
+    type StateSalaryFamilyResponse @exclude {
+        state_family_count: [StateSalaryFamily]
+    }
+
     type Query {
         user(email: String!): User!
         login(email: String!, password: String!): AuthData!
@@ -191,6 +205,10 @@ export const typeDefs = gql`
             job_family: String!
         ): TopSkillsResponse
         getRecommendationStateCount(jobIds: [Int!]!): TopSkillsResponse
+        getStateSalaryCount(
+            jobIds: [Int!]!
+            jobFamily: [String!]!
+        ): StateSalaryFamilyResponse
     }
 
     type Mutation {

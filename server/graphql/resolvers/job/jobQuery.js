@@ -80,4 +80,82 @@ const getJobData = async (parent, args) => {
     }
 };
 
-export default { getJobData };
+const getCompanyDataByFamily = async (parent, { job_family }) => {
+    const driver = neo4j.driver(
+        config.NEO4J_URI,
+        neo4j.auth.basic(config.NEO4J_USER, config.NEO4J_PASSWORD)
+    );
+
+    try {
+        const session = driver.session({ database: 'neo4j' });
+
+        const readQuery = `
+            MATCH (job:Job) - [:Work_4_Company] -> (company:Company)
+            MATCH (job) - [:has_job_family] -> (job_family:Job_Family)
+            WHERE job_family.name = "${job_family}"
+            RETURN DISTINCT(company.name) AS names
+            ORDER BY names
+        `;
+
+        console.log(readQuery);
+
+        const readResult = await session.executeRead((tx) => tx.run(readQuery));
+
+        let final_result = [];
+
+        readResult.records.forEach((record) => {
+            final_result.push(record.get('names'));
+        });
+
+        return { companies: final_result };
+    } catch (error) {
+        throw new GraphQLError(error.message);
+    } finally {
+        await driver.close();
+    }
+};
+
+const getTopSkillsByCompany = async (parent, { company_name, job_family }) => {
+    const driver = neo4j.driver(
+        config.NEO4J_URI,
+        neo4j.auth.basic(config.NEO4J_USER, config.NEO4J_PASSWORD)
+    );
+
+    try {
+        const session = driver.session({ database: 'neo4j' });
+
+        const readQuery =
+            `
+            MATCH (job:Job) - [:Work_4_Company] -> (company:Company)
+            MATCH (job) - [:has_job_family] -> (job_family:Job_Family)
+            MATCH (job) - [:Requires_Skill] -> (skills:Skill)
+            WHERE ` +
+            (company_name !== ''
+                ? `company.name = "${company_name}" AND `
+                : ``) +
+            `job_family.name = "${job_family}"
+            RETURN skills.name as skill, count(skills.name) as skill_count
+            ORDER BY skill_count DESC
+            LIMIT 5
+        `;
+
+        const readResult = await session.executeRead((tx) => tx.run(readQuery));
+
+        let final_result = [];
+
+        readResult.records.forEach((record) => {
+            final_result.push({
+                skill: record.get('skill'),
+                skill_count: record.get('skill_count')
+            });
+        });
+
+        return { top_skills: final_result };
+    } catch (error) {
+        throw new GraphQLError(error.message);
+    } finally {
+        await driver.close();
+    }
+};
+
+export default { getJobData, getCompanyDataByFamily, getTopSkillsByCompany };

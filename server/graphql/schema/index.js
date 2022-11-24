@@ -157,11 +157,29 @@ export const typeDefs = gql`
         states: String!
     }
 
+    type CompanyResponse @exclude {
+        companies: [String!]!
+    }
+
+    type SkillFrequency @exclude {
+        skill: String!
+        skill_count: Int!
+    }
+
+    type TopSkillsResponse @exclude {
+        top_skills: [SkillFrequency]
+    }
+
     type Query {
         user(email: String!): User!
         login(email: String!, password: String!): AuthData!
         getUserDataById(userId: ID!): UserMetaData!
         getJobData(input: jobDataInput!): [JobData!]!
+        getCompanyDataByFamily(job_family: String!): CompanyResponse
+        getTopSkillsByCompany(
+            company_name: String!
+            job_family: String!
+        ): TopSkillsResponse
     }
 
     type Mutation {

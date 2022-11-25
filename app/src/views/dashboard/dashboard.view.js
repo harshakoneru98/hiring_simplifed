@@ -36,6 +36,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import USAMap from 'react-usa-map';
+import MapModal from '../../components/MapModal/mapModal.component';
 
 ChartJS.register(
     RadialLinearScale,
@@ -96,6 +97,22 @@ const QUERY_STATE_COUNT = gql`
             state_count {
                 job_count
                 state_code
+                state_name
+            }
+        }
+    }
+`;
+
+const QUERY_STATE_MAP_COUNT = gql`
+    query GetStateSalaryCount($jobIds: [Int!]!, $jobFamily: [String!]!) {
+        getStateSalaryCount(jobIds: $jobIds, jobFamily: $jobFamily) {
+            state_family_count {
+                avg_salary
+                job_role
+                max_salary
+                min_salary
+                state_code
+                state_count
                 state_name
             }
         }
@@ -370,10 +387,6 @@ export default function DashboardView() {
 
     useEffect(() => {
         if (stateCountData) {
-            console.log(
-                'State Count : ',
-                stateCountData.getRecommendationStateCount.state_count
-            );
             const state_map_config = createMapConfig(
                 stateCountData.getRecommendationStateCount.state_count
             );
@@ -426,6 +439,12 @@ export default function DashboardView() {
             companyName: ''
         }
     });
+
+    const [show, setShow] = useState(false);
+    const [selectedState, setSelectedState] = useState('');
+
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
 
     const [allCompanySkills, setAllCompanySkills] = useState([]);
     const [specificCompanySkills, setSpecificCompanySkills] = useState([]);
@@ -491,25 +510,17 @@ export default function DashboardView() {
         }
     }, [allSkillsData]);
 
-    const statesCustomConfig = () => {
-        return {
-            NJ: {
-                fill: 'navy',
-                clickHandler: (event) =>
-                    console.log('Custom handler for NJ', event.target.dataset)
-            },
-            NY: {
-                fill: '#CC0000'
-            },
-            CA: {
-                fill: 'black'
-            }
-        };
+    const handleMap = (event) => {
+        setShow(true);
+        setSelectedState(event.target.dataset.name);
     };
 
-    const handleMap = (event) => {
-        alert(event.target.dataset.name);
-    };
+    const { data: stateData } = useQuery(QUERY_STATE_MAP_COUNT, {
+        variables: {
+            jobIds: userInfo?.job_recommendations,
+            jobFamily: cluster_config[userInfo?.cluster]?.job_family
+        }
+    });
 
     return (
         <Container>
@@ -641,6 +652,18 @@ export default function DashboardView() {
                         customize={stateMap}
                         onClick={handleMap}
                     />
+
+                    {show && (
+                        <MapModal
+                            show={show}
+                            handleClose={handleClose}
+                            state={selectedState}
+                            stateData={
+                                stateData?.getStateSalaryCount
+                                    ?.state_family_count
+                            }
+                        />
+                    )}
                 </Col>
             </Row>
         </Container>

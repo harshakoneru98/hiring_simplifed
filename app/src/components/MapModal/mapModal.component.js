@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { state_names } from '../../config';
-import './mapModal.scss';
 
 export default function MapModal({ state, show, handleClose, stateData }) {
     let selected_state = stateData.filter((s) => s.state_code === state);

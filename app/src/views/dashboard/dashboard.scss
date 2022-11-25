@@ -63,3 +63,11 @@ path:hover {
     opacity: 0.5;
     cursor: pointer;
 }
+
+.map-label{
+    margin-bottom: 30px;
+    .map-label-header{
+        font-weight: 600;
+        text-align: center;
+    }
+}

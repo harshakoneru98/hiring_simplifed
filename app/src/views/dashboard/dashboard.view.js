@@ -384,9 +384,15 @@ export default function DashboardView() {
     };
 
     const [stateMap, setStateMap] = useState({});
+    const [top2states, setTop2States] = useState([]);
 
     useEffect(() => {
         if (stateCountData) {
+            setTop2States(
+                stateCountData.getRecommendationStateCount.state_count
+                    .slice(0, 2)
+                    .map((i) => i.state_name)
+            );
             const state_map_config = createMapConfig(
                 stateCountData.getRecommendationStateCount.state_count
             );
@@ -647,6 +653,14 @@ export default function DashboardView() {
                     Location based Salary
                 </Typography>
                 <Col xs={12} className="usa-map-col">
+                    <Card className="map-label">
+                        <Card.Body className="map-label-header">
+                            It's time to relocate to {top2states?.join(' or ')}{' '}
+                            for better career opportunities based on your Top
+                            100 Recommendations
+                        </Card.Body>
+                    </Card>
+
                     <USAMap
                         width="80%"
                         customize={stateMap}

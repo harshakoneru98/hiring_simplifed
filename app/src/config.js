@@ -894,3 +894,218 @@ export const cluster_config = {
             'Based on your profile, it looks like you are looking for full stack Data Science roles.'
     }
 };
+
+export const state_names = [
+    {
+        name: 'AL',
+        fullName: 'Alabama'
+    },
+    {
+        name: 'AK',
+        fullName: 'Alaska'
+    },
+    {
+        name: 'AZ',
+        fullName: 'Arizona'
+    },
+    {
+        name: 'AR',
+        fullName: 'Arkansas'
+    },
+    {
+        name: 'CA',
+        fullName: 'California'
+    },
+    {
+        name: 'CO',
+        fullName: 'Colorado'
+    },
+    {
+        name: 'CT',
+        fullName: 'Connecticut'
+    },
+    {
+        name: 'DE',
+        fullName: 'Delaware'
+    },
+    {
+        name: 'DC',
+        fullName: 'District of Columbia'
+    },
+    {
+        name: 'FL',
+        fullName: 'Florida'
+    },
+    {
+        name: 'GA',
+        fullName: 'Georgia'
+    },
+    {
+        name: 'HI',
+        fullName: 'Hawaii'
+    },
+    {
+        name: 'ID',
+        fullName: 'Idaho'
+    },
+    {
+        name: 'IL',
+        fullName: 'Illinois'
+    },
+    {
+        name: 'IN',
+        fullName: 'Indiana'
+    },
+    {
+        name: 'IA',
+        fullName: 'Iowa'
+    },
+    {
+        name: 'KS',
+        fullName: 'Kansas'
+    },
+    {
+        name: 'KY',
+        fullName: 'Kentucky'
+    },
+    {
+        name: 'LA',
+        fullName: 'Louisiana'
+    },
+    {
+        name: 'ME',
+        fullName: 'Maine'
+    },
+    {
+        name: 'MD',
+        fullName: 'Maryland'
+    },
+    {
+        name: 'MA',
+        fullName: 'Massachusetts'
+    },
+    {
+        name: 'MI',
+        fullName: 'Michigan'
+    },
+    {
+        name: 'MN',
+        fullName: 'Minnesota'
+    },
+    {
+        name: 'MS',
+        fullName: 'Mississippi'
+    },
+    {
+        name: 'MO',
+        fullName: 'Missouri'
+    },
+    {
+        name: 'MT',
+        fullName: 'Montana'
+    },
+    {
+        name: 'NE',
+        fullName: 'Nebraska'
+    },
+    {
+        name: 'NV',
+        fullName: 'Nevada'
+    },
+    {
+        name: 'NH',
+        fullName: 'New Hampshire'
+    },
+    {
+        name: 'NJ',
+        fullName: 'New Jersey'
+    },
+    {
+        name: 'NM',
+        fullName: 'New Mexico'
+    },
+    {
+        name: 'NY',
+        fullName: 'New York'
+    },
+    {
+        name: 'NC',
+        fullName: 'North Carolina'
+    },
+    {
+        name: 'ND',
+        fullName: 'North Dakota'
+    },
+    {
+        name: 'OH',
+        fullName: 'Ohio'
+    },
+    {
+        name: 'OK',
+        fullName: 'Oklahoma'
+    },
+    {
+        name: 'OR',
+        fullName: 'Oregon'
+    },
+    {
+        name: 'PA',
+        fullName: 'Pennsylvania'
+    },
+    {
+        name: 'PR',
+        fullName: 'Puerto Rico'
+    },
+    {
+        name: 'RI',
+        fullName: 'Rhode Island'
+    },
+    {
+        name: 'SC',
+        fullName: 'South Carolina'
+    },
+    {
+        name: 'SD',
+        fullName: 'South Dakota'
+    },
+    {
+        name: 'TN',
+        fullName: 'Tennessee'
+    },
+    {
+        name: 'TX',
+        fullName: 'Texas'
+    },
+    {
+        name: 'UT',
+        fullName: 'Utah'
+    },
+    {
+        name: 'VT',
+        fullName: 'Vermont'
+    },
+    {
+        name: 'VA',
+        fullName: 'Virginia'
+    },
+    {
+        name: 'VI',
+        fullName: 'Virgin Islands'
+    },
+    {
+        name: 'WA',
+        fullName: 'Washington'
+    },
+    {
+        name: 'WV',
+        fullName: 'West Virginia'
+    },
+    {
+        name: 'WI',
+        fullName: 'Wisconsin'
+    },
+    {
+        name: 'WY',
+        fullName: 'Wyoming'
+    }
+];

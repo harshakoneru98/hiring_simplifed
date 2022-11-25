@@ -66,8 +66,13 @@ export default function Header() {
                         <Navbar.Brand
                             as={Link}
                             to={authPages ? '/' : '/dashboard'}
+                            className="header-logo"
                         >
-                            Hiring Simplified
+                            <img
+                                className="header-logo"
+                                src="/logo-header.jpg"
+                            />
+                            {/* Hiring Simplified */}
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse

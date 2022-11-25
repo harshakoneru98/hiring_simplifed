@@ -1,0 +1,18 @@
+$button-color: #137dc5;
+
+.home-image {
+    background: url('../../../public/job-search.jpg');
+    height: 100vh;
+    margin: 0%;
+    background-size: cover;
+}
+
+.btn-block-home {
+    display: block;
+    background-color: $button-color !important;
+    border-color: $button-color !important;
+    width: 60% !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+

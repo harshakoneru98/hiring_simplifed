@@ -12,7 +12,20 @@ $button-color: #137dc5;
     background-color: $button-color !important;
     border-color: $button-color !important;
     width: 60% !important;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 20px auto;
 }
 
+.value-proposition div.row p{
+    text-align: justify;
+    margin: 0 2px;
+    margin-top: 20px !important;
+}
+
+.home-column-text{
+    margin: auto 0px;
+}
+
+.home-logo{
+    width: 70%;
+    margin: 0 auto;
+}

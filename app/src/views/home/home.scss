@@ -1,17 +1,10 @@
 $button-color: #137dc5;
 
-.home-image {
-    background: url('../../../public/job-search.jpg');
-    height: 100vh;
-    margin: 0%;
-    background-size: cover;
-}
-
 .btn-block-home {
+    padding: 10px;
     display: block;
     background-color: $button-color !important;
     border-color: $button-color !important;
-    width: 60% !important;
     margin: 20px auto;
 }
 
@@ -19,6 +12,7 @@ $button-color: #137dc5;
     text-align: justify;
     margin: 0 2px;
     margin-top: 20px !important;
+    padding: 0 40px;
 }
 
 .home-column-text{
@@ -26,6 +20,43 @@ $button-color: #137dc5;
 }
 
 .home-logo{
-    width: 70%;
-    margin: 0 auto;
+    width: 25%;
+    margin: 40px auto;
+}
+
+.card-row{
+    ul {
+        text-align: justify;
+        li:first-child{
+            margin-top: 10px;
+        }
+        li{
+            margin-left: 40px;
+        }
+        margin-bottom: 0px !important;
+    }
+}
+
+.auth-home{
+    margin: auto 0px;
+    a{
+        width: 18vw;
+    }
+}
+
+.home-row{
+    margin: 40px 0;
+    p{
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+.skill-image{
+    width: 100%;
+}
+
+.state-stats{
+    margin-top: 50px !important;
 }

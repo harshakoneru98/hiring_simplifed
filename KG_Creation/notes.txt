@@ -1,0 +1,5 @@
+This folder contains scripts for 
+Data Cleaning
+Entitry Resolition
+KG Creation
+Resume Parsing

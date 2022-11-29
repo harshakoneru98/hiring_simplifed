@@ -2,12 +2,14 @@ from sentence_transformers import SentenceTransformer, util
 from pdfminer.high_level import extract_text
 from spacy.matcher import Matcher
 from collections import defaultdict
-import spacy, sys, json, torch
+import spacy, sys, json, torch, pickle
 
 input_file_path = sys.argv[1]
 skill_embeddings_file_path = sys.argv[2]
+sentence_embedder_pkl = sys.argv[3]
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+with open(sentence_embedder_pkl, "rb") as f:
+    model = pickle.load(f)
 
 with open(skill_embeddings_file_path, 'r') as f:
     skills_data_embeddings = json.load(f)

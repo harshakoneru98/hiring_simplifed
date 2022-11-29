@@ -18,7 +18,8 @@ const extractSkills = async (userId, file_path) => {
         scriptPath: 'graphql/resolvers/fileUpload',
         args: [
             file_path,
-            './graphql/resolvers/fileUpload/skills_embeddings.json'
+            './graphql/resolvers/fileUpload/skills_embeddings.json',
+            './graphql/resolvers/fileUpload/sentence_embedder.pkl'
         ]
     };
 

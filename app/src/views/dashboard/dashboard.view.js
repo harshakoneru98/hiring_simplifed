@@ -529,7 +529,14 @@ export default function DashboardView() {
     });
 
     return (
-        <Container>
+        <Container className={jobLoading ? 'loading' : ''}>
+            {jobLoading && (
+                <img
+                    src="/loading.gif"
+                    alt="preview"
+                    className="loader-image"
+                />
+            )}
             <Row className="dashboard-rows">
                 <Card>
                     {userInfo.firstName && (

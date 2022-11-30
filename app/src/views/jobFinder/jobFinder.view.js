@@ -519,9 +519,19 @@ export default function JobFinderView() {
     };
 
     return (
-        <div className="container job-search-container">
+        <div
+            className="container job-search-container"
+            className={jobLoading ? 'loading' : ''}
+        >
+            {jobLoading && (
+                <img
+                    src="/loading.gif"
+                    alt="preview"
+                    className="loader-image"
+                />
+            )}
             <div className="row">
-                <div className="main_content ">
+                <div className="main_content">
                     <h2 className="job-search-header">
                         Ready to find your next Job?
                     </h2>

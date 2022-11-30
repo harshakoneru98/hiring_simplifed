@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { gql, useMutation, useQuery } from '@apollo/client';
@@ -158,63 +158,77 @@ export default function ResumeModal({ show, backdrop, handleClose }) {
     ));
 
     return (
-        <Modal
-            show={show}
-            backdrop={backdrop}
-            keyboard={false}
-            onHide={handleClose}
-        >
-            <div className="resume-container">
-                <h4>Upload Resume</h4>
-                <div className="upload-container">
-                    <div className="border-container">
-                        <div {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <p>Drag and drop a file here, or click</p>
-                            <p className="fileNames">Only .pdf files allowed</p>
-                        </div>
-                        <div>
-                            <div>{resume_file}</div>
+        <Fragment>
+            <Modal
+                show={show}
+                backdrop={backdrop}
+                keyboard={false}
+                onHide={handleClose}
+            >
+                <div className="resume-container">
+                    <h4>Upload Resume</h4>
+                    <div className="upload-container">
+                        <div className="border-container">
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <p>Drag and drop a file here, or click</p>
+                                <p className="fileNames">
+                                    Only .pdf files allowed
+                                </p>
+                            </div>
+                            <div>
+                                <div>{resume_file}</div>
+                            </div>
                         </div>
                     </div>
+                    <table className="upload-table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a
+                                        className={
+                                            files[0]?.name && !resumeLoading
+                                                ? 'btn btn-success'
+                                                : 'btn btn-success is-diabled'
+                                        }
+                                        onClick={(e) => {
+                                            uploadFile();
+                                            e.preventDefault();
+                                        }}
+                                    >
+                                        Upload
+                                    </a>
+                                </th>
+                                <th>
+                                    <a
+                                        className={
+                                            !resumeLoading
+                                                ? 'btn btn-danger'
+                                                : 'btn btn-danger is-diabled'
+                                        }
+                                        onClick={(e) => {
+                                            setFiles([]);
+                                            e.preventDefault();
+                                        }}
+                                    >
+                                        Clear
+                                    </a>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {(resumeLoading || updateUserLoading) && (
+                        <Fragment>
+                            <img
+                                src="/loading.gif"
+                                alt="preview"
+                                className="loader-image"
+                            />
+                            <p>Extracting skills from your resume...</p>
+                        </Fragment>
+                    )}
                 </div>
-                <table className="upload-table">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <a
-                                    className={
-                                        files[0]?.name && !resumeLoading
-                                            ? 'btn btn-success'
-                                            : 'btn btn-success is-diabled'
-                                    }
-                                    onClick={(e) => {
-                                        uploadFile();
-                                        e.preventDefault();
-                                    }}
-                                >
-                                    Upload
-                                </a>
-                            </th>
-                            <th>
-                                <a
-                                    className={
-                                        !resumeLoading
-                                            ? 'btn btn-danger'
-                                            : 'btn btn-danger is-diabled'
-                                    }
-                                    onClick={(e) => {
-                                        setFiles([]);
-                                        e.preventDefault();
-                                    }}
-                                >
-                                    Clear
-                                </a>
-                            </th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </Modal>
+            </Modal>
+        </Fragment>
     );
 }

@@ -36,6 +36,53 @@ Our final product, where we used clustering, reduced the recommendation time fro
 ## Application Architecture
 ![https://github.com/harshakoneru98/hiring_simplifed/blob/main/images/Architecture.png](https://github.com/harshakoneru98/hiring_simplifed/blob/main/images/Architecture.png)
 
+## Setup
+Get the code by cloning this repository using git
+```
+git clone https://github.com/harshakoneru98/hiring_simplifed.git
+```
+Once downloaded, open terminal in the project directory, go to app folder and install dependencies with:
+```
+npm install
+```
+Open another terminal in the project directory, go to server folder and install dependencies with:
+```
+npm install
+```
+Create **.env** file in server folder with the following attribute names:
+```
+AWS_ACCESS_KEY = <your_aws_access_key>
+AWS_SECRET_KEY = <your_aws_secret_key>
+AWS_REGION = <your_aws_region>
+DATABASE_NAME = <your_dynamodb_database_name> Ex: 'user_data'
+EMAIL_INDEX = <your_dynamodb_database_email_index_name> Ex: 'email-index'
+AUTH_KEY = <your_auth_key> Ex: 'abc123'
+RESUME_BUCKET = <your_image_s3_bucket_name> Ex: 'parse-job-resumes'
+PYTHON_PATH = <your_python_path> Ex: '/opt/anaconda3/bin/python'
+SERVER_URL = <your_graphql_server_url> Ex: 'http://localhost:4000/graphql'
+NEO4J_USER = <your_neo4j_user> Ex: 'neo4j'
+NEO4J_PASSWORD = <your_neo4j_password> Ex: 'your_password'
+NEO4J_URI = <your_neo4j_URI> Ex: 'neo4j+s://9015cg79.databases.neo4j.io'
+```
+Install following python libraries
+```
+spacy
+sentence_transformers
+scipy
+pickle
+torch
+```
+## Run the Application
+First open the terminal at app folder in project directory. Run the following command to run the front-end application.
+``` bash
+npm run start
+```
+Next open the terminal at server folder in project directory. Run the following command to run the back-end server.
+``` bash
+npm run start
+```
+The app should now be up and running at [http://localhost:3000](http://localhost:3000/)  🚀
+
 ## Learning from our Project
 1. ***Web Scraping:*** LinkedIn doesn’t allow web scraping, so we had to learn Selenium for data scraping because it makes the website feel like a user is accessing their site using chrome. So It was excellent learning a new tool, debugging its errors and writing a process which extracts necessary information and handles errors gracefully.
 2. ***Entity Resolution:*** We learnt a new approach to entity resolution where we explored using semantic word embeddings to estimate the cosine similarity

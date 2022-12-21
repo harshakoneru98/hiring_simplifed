@@ -33,6 +33,9 @@ We performed K-means clustering on Job Node embeddings and obtained the best K=9
 ### Results
 Our final product, where we used clustering, reduced the recommendation time from 5 seconds to less than 1 second.
 
+### Application Architecture
+![https://github.com/harshakoneru98/hiring_simplifed/tree/main/images/Architecture.png](https://github.com/harshakoneru98/hiring_simplifed/tree/main/images/Architecture.png)
+
 ## Learning from our Project
 1. ***Web Scraping:*** LinkedIn doesn’t allow web scraping, so we had to learn Selenium for data scraping because it makes the website feel like a user is accessing their site using chrome. So It was excellent learning a new tool, debugging its errors and writing a process which extracts necessary information and handles errors gracefully.
 2. ***Entity Resolution:*** We learnt a new approach to entity resolution where we explored using semantic word embeddings to estimate the cosine similarity

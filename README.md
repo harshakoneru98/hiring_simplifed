@@ -33,7 +33,7 @@ We performed K-means clustering on Job Node embeddings and obtained the best K=9
 ### Results
 Our final product, where we used clustering, reduced the recommendation time from 5 seconds to less than 1 second.
 
-### Application Architecture
+## Application Architecture
 ![https://github.com/harshakoneru98/hiring_simplifed/blob/main/images/Architecture.png](https://github.com/harshakoneru98/hiring_simplifed/blob/main/images/Architecture.png)
 
 ## Learning from our Project

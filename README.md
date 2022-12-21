@@ -1,9 +1,12 @@
 # Hiring Simplified
 ***DEMO*** 👉  [https://www.youtube.com/watch?v=sRBbdUnNt4U](https://www.youtube.com/watch?v=sRBbdUnNt4U)
+
 ## Project Goal
 We have developed a Knowledge Graph based Job Search platform. Our platform is a one-stop solution for searching for open job positions, getting personalized job recommendations, and getting insights about specific job openings. We have also designed some high-impact visualizations related to skills and salary statistics. We developed a content-based Recommendation engine with features coming as high dimensional embeddings, which we developed by training a deep graph neural network.
+
 ## Research Questions
 We have tried to prove there is an opportunity to convert natural language job descriptions into graphs of industry skills and use their trained graph embeddings in building a content-based recommendation Engine. Secondly, we have tried to create a knowledge graph that can answer reliable questions like ***“Top 10 skills for Amazon Data Scientist, Best Product Manager roles in Bay Area.”***
+
 ## Technical Challenge 1
 ### Problem
 The main technical challenge we have tried to solve in the project is to build a content-based recommendation system. The features of this recommendation system are user profile & Job description KG embeddings which we obtain by treating user profile and job descriptions as graphs.
@@ -14,10 +17,12 @@ For generating embeddings, we thought of training a Graph neural network to pred
 2. Train a deep GNN and predict the job family, which in our data has a cardinality of 7
 3. Extract the linear layer for all jobs and store them as Job node property in our Knowledge Graph
 4. For the use resume, generate user embedding and find the 100 nearest neighbors.
-5. Validate results using 20 sample resumes and see if recommendations are aligned with user profiles
+5. Validate results using 20 sample resumes and see if recommendations are aligned with user profiles.
+
 ### Evaluation
-***1. Model Evaluation:*** We compared our model results with a baseline model, which predicts everything as a product manager. ***Baseline Model Accuracy: 24% | Our Model Accuracy: 68%***
-***2. Recommendation Results Quality:*** We performed a User Acceptance Test with a sample size of 20. We found an overall acceptance of ~85% with a question size of 5
+1. ***Model Evaluation:*** We compared our model results with a baseline model, which predicts everything as a product manager. ***Baseline Model Accuracy: 24% | Our Model Accuracy: 68%***
+2. ***Recommendation Results Quality:*** We performed a User Acceptance Test with a sample size of 20. We found an overall acceptance of ~85% with a question size of 5
+
 ## Technical Challenge 2
 ### Problem
 The time complexity of our initial recommendation system was  where n is the number of active graph nodes. Currently, we only have ~7300 nodes, and the time complexity is around 5 seconds, but in a real scenario, this number would be several hundred thousand. So we wanted to reduce it.
@@ -27,9 +32,10 @@ When the user resume is parsed, its vector representation gets generated, and we
 We performed K-means clustering on Job Node embeddings and obtained the best K=9 using the elbow curve method. When user embedding gets generated, we first identify the user cluster and then find the best neighbors only from the job nodes that fall into that cluster. Time complexity got reduced from  to  , where k is the number of clusters and k>1 and n is the number of active graph job nodes. 
 ### Results
 Our final product, where we used clustering, reduced the recommendation time from 5 seconds to less than 1 second.
+
 ## Learning from our Project
-***1. Web Scraping:*** LinkedIn doesn’t allow web scraping, so we had to learn Selenium for data scraping because it makes the website feel like a user is accessing their site using chrome. So It was excellent learning a new tool, debugging its errors and writing a process which extracts necessary information and handles errors gracefully.
-***2. Entity Resolution:*** We learnt a new approach to entity resolution where we explored using semantic word embeddings to estimate the cosine similarity
-***3. Graph Modeling:*** First, the challenge was generating graph embeddings for job descriptions, which will later act as item features in the literature on recommendation systems. To do that, we explored KGTK and Neo4j AuraDS frameworks. We could not use either because KGTK requires TensorFlow, and since we have an M1 chip MacBook, it was not compatible, and Neo4j AuraDS is a paid platform. For the modeling, we had to brainstorm a lot about how our graph would look and what node and edge features would be. After finishing this task, we gained understanding of different problems we can solve with this approach
-***4. Web Application Development:*** We finalized using the Neo4j database for the project. So, we choose to develop an application using GRAND stack, as it is easy to integrate Neo4j. For this, we have to learn GraphQL and Apollo Server. And the exciting learning is that we use GraphQL to query Neo4j instead of writing Cypher queries for simple tasks.
-***5. KG Quality assessment:*** Since evaluating KG quality is a subjective task, we brainstormed a lot on how we can access KG quality. We explored 4 dimensions in which we could access it like UAT, data checks. With our learnings from KG quality assessment, in future we would add predefined quality checks
+1. ***Web Scraping:*** LinkedIn doesn’t allow web scraping, so we had to learn Selenium for data scraping because it makes the website feel like a user is accessing their site using chrome. So It was excellent learning a new tool, debugging its errors and writing a process which extracts necessary information and handles errors gracefully.
+2. ***Entity Resolution:*** We learnt a new approach to entity resolution where we explored using semantic word embeddings to estimate the cosine similarity
+3. ***Graph Modeling:*** First, the challenge was generating graph embeddings for job descriptions, which will later act as item features in the literature on recommendation systems. To do that, we explored KGTK and Neo4j AuraDS frameworks. We could not use either because KGTK requires TensorFlow, and since we have an M1 chip MacBook, it was not compatible, and Neo4j AuraDS is a paid platform. For the modeling, we had to brainstorm a lot about how our graph would look and what node and edge features would be. After finishing this task, we gained understanding of different problems we can solve with this approach
+4. ***Web Application Development:*** We finalized using the Neo4j database for the project. So, we choose to develop an application using GRAND stack, as it is easy to integrate Neo4j. For this, we have to learn GraphQL and Apollo Server. And the exciting learning is that we use GraphQL to query Neo4j instead of writing Cypher queries for simple tasks.
+5. ***KG Quality assessment:*** Since evaluating KG quality is a subjective task, we brainstormed a lot on how we can access KG quality. We explored 4 dimensions in which we could access it like UAT, data checks. With our learnings from KG quality assessment, in future we would add predefined quality checks

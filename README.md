@@ -25,7 +25,7 @@ For generating embeddings, we thought of training a Graph neural network to pred
 
 ## Technical Challenge 2
 ### Problem
-The time complexity of our initial recommendation system was  where n is the number of active graph nodes. Currently, we only have ~7300 nodes, and the time complexity is around 5 seconds, but in a real scenario, this number would be several hundred thousand. So we wanted to reduce it.
+The time complexity of our initial recommendation system was O(n) where n is the number of active graph nodes. Currently, we only have ~7300 nodes, and the time complexity is around 5 seconds, but in a real scenario, this number would be several hundred thousand. So we wanted to reduce it.
 ### Example
 When the user resume is parsed, its vector representation gets generated, and we compare it against all 7300 node embeddings and find the top 100 embeddings with the highest cosine similarity. We duplicated the data 100 times for experimentation, and the time taken was around 1 minute.
 ### Solution Approach

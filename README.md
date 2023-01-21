@@ -29,7 +29,7 @@ The time complexity of our initial recommendation system was O(n) where n is the
 ### Example
 When the user resume is parsed, its vector representation gets generated, and we compare it against all 7300 node embeddings and find the top 100 embeddings with the highest cosine similarity. We duplicated the data 100 times for experimentation, and the time taken was around 1 minute.
 ### Solution Approach
-We performed K-means clustering on Job Node embeddings and obtained the best K=9 using the elbow curve method. When user embedding gets generated, we first identify the user cluster and then find the best neighbors only from the job nodes that fall into that cluster. Time complexity got reduced from  to  , where k is the number of clusters and k>1 and n is the number of active graph job nodes. 
+We performed K-means clustering on Job Node embeddings and obtained the best K=9 using the elbow curve method. When user embedding gets generated, we first identify the user cluster and then find the best neighbors only from the job nodes that fall into that cluster. Time complexity got reduced from O(n) to O(n/k), where k is the number of clusters and k>1 and n is the number of active graph job nodes. 
 ### Results
 Our final product, where we used clustering, reduced the recommendation time from 5 seconds to less than 1 second.
 
